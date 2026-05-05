@@ -508,6 +508,88 @@
     .container{padding:0 20px}
   }
 
+  /* ============ MOBILE CUT-DOWN ============ */
+  /* Aggressive content reduction for screens ≤640px.
+     Mobile users are mostly returning customers heading to login
+     or principals quickly evaluating — they don't need the full
+     marketing showcase. */
+
+  .mobile-only{display:none}
+
+  .mobile-trust{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:var(--radius);
+    padding:24px;
+    text-align:center;
+  }
+  .mobile-trust h3{color:#fff;font-size:18px;margin-bottom:10px}
+  .mobile-trust p{color:rgba(255,255,255,0.72);font-size:14px;margin-bottom:14px;line-height:1.6}
+  .mobile-trust .badges{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  }
+  .mobile-trust .badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:600;
+    color:#7FB6FF;
+    padding:5px 10px;
+    background:rgba(30,123,255,0.12);
+    border:1px solid rgba(127,182,255,0.25);
+    border-radius:6px;
+  }
+
+  @media (max-width:640px){
+    /* hide elements that don't earn their place on small screens */
+    .hero-visual{display:none}
+    .smart-visual{display:none}
+    .feature.mobile-hide{display:none}
+    .how{display:none}
+    .analytics{display:none}
+    .security .section-head{display:none}
+    .security-grid{display:none}
+    .footer-grid > div:nth-child(3),
+    .footer-grid > div:nth-child(4){display:none}
+
+    /* surface the mobile-only trust strip */
+    .mobile-only{display:block}
+    .security{padding:40px 0}
+
+    /* tighten section padding on mobile */
+    section{padding:56px 0}
+    .hero-inner{padding:36px 0 48px;gap:0}
+
+    /* hero copy: tighter */
+    .hero h1{font-size:34px;margin-bottom:14px}
+    .hero-lead{font-size:16px;margin-bottom:24px}
+    .hero-trust{gap:14px;padding-top:18px}
+    .hero-eyebrow{margin-bottom:14px;font-size:11px}
+
+    /* smart section: copy only */
+    .smart-grid{gap:0}
+    .smart-copy h2{font-size:26px;margin-bottom:14px}
+    .smart-copy>p{font-size:15px;margin-bottom:22px}
+    .smart-criterion-icon{width:32px;height:32px}
+    .smart-criterion strong{font-size:14px}
+    .smart-criterion span{font-size:13px}
+
+    /* features tighter */
+    .feature{padding:22px}
+    .feature h3{font-size:18px}
+    .section-head{margin-bottom:36px}
+    .section-head h2{font-size:26px}
+    .section-head p{font-size:15px}
+
+    /* contact tighter */
+    .contact-card h2{font-size:24px}
+    .contact-card p{font-size:15px;margin-bottom:22px}
+    .contact-meta{flex-direction:column;gap:10px;text-align:left;align-items:flex-start}
+
+    /* footer slim */
+    .footer{padding:36px 0 24px}
+    .footer-grid{gap:24px;margin-bottom:24px}
+    .footer-bottom{flex-direction:column;align-items:flex-start;gap:6px;font-size:12px}
+  }
+
   /* mobile menu */
   .mobile-menu{
     display:none;
@@ -568,7 +650,6 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#smart" data-i18n="nav.smart">Vikarieförslag</a>
     <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
-    <a href="#analys" data-i18n="nav.analytics">Analys</a>
     <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
     <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
     <a href="#login" data-i18n="nav.login">Logga in</a>
@@ -810,7 +891,7 @@
         <p data-i18n="f1.body">Realtidsöversikt över personal, tillgänglighet och pågående lektioner. Markera frånvaro med ett klick.</p>
       </article>
 
-      <article class="feature reveal">
+      <article class="feature reveal mobile-hide">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         </div>
@@ -826,7 +907,7 @@
         <p data-i18n="f3.body">KPI:er, täckningsgrad och belastningsfördelning. Se direkt om någon tar för många vikariat.</p>
       </article>
 
-      <article class="feature reveal">
+      <article class="feature reveal mobile-hide">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
         </div>
@@ -842,7 +923,7 @@
         <p data-i18n="f5.body">Logga in med befintliga Google- eller Microsoft-konton. Inga nya lösenord, ingen extra IT-administration.</p>
       </article>
 
-      <article class="feature reveal">
+      <article class="feature reveal mobile-hide">
         <div class="feature-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6"/></svg>
         </div>
@@ -1045,6 +1126,16 @@
         <p data-i18n="sec3.body">Inloggning via Google &amp; Microsoft. Tydliga behörighetsnivåer per roll. Audit log på alla ändringar.</p>
       </div>
     </div>
+
+    <div class="mobile-only mobile-trust">
+      <h3 data-i18n="m_trust.title">Säker &amp; GDPR-kompatibel</h3>
+      <p data-i18n="m_trust.body">Byggt för svenska skolors verklighet. Personaldata stannar inom EU och hanteras enligt gällande dataskyddskrav.</p>
+      <div class="badges">
+        <span class="badge" data-i18n="hero.trust_1">All data inom EU</span>
+        <span class="badge" data-i18n="hero.trust_2">GDPR-kompatibel</span>
+        <span class="badge">SSO</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1177,6 +1268,7 @@
       'sec1.title':'All data inom EU','sec1.body':'Hosting och backuper sker uteslutande på EU-baserade servrar. Inga dataöverföringar till tredjeland.',
       'sec2.title':'GDPR-kompatibel','sec2.body':'Personuppgiftsbiträdesavtal (DPA) ingår. Berättigat intresse som rättslig grund. Tydliga gallringsrutiner.',
       'sec3.title':'SSO & rollstyrning','sec3.body':'Inloggning via Google & Microsoft. Tydliga behörighetsnivåer per roll. Audit log på alla ändringar.',
+      'm_trust.title':'Säker & GDPR-kompatibel','m_trust.body':'Byggt för svenska skolors verklighet. Personaldata stannar inom EU och hanteras enligt gällande dataskyddskrav.',
       'contact.eyebrow':'KOM IGÅNG','contact.title':'Vill ni testa FrånvaroKollen på er skola?',
       'contact.lead':'Vi anpassar lösningen efter er skolas storlek, system och arbetsflöden. Skicka ett meddelande så återkommer vi inom 24 timmar med en offert.',
       'contact.cta_primary':'Kontakta oss för offert →','contact.cta_secondary':'Logga in',
@@ -1246,6 +1338,7 @@
       'sec1.title':'All data within EU','sec1.body':'Hosting and backups are exclusively on EU-based servers. No transfers to third countries.',
       'sec2.title':'GDPR-compliant','sec2.body':'Data Processing Agreement (DPA) included. Legitimate interest as legal basis. Clear retention policies.',
       'sec3.title':'SSO & role-based access','sec3.body':'Sign in via Google & Microsoft. Clear permission levels per role. Audit log on every change.',
+      'm_trust.title':'Secure & GDPR-compliant','m_trust.body':'Built for the realities of Swedish schools. Staff data stays within the EU and is handled according to applicable data protection standards.',
       'contact.eyebrow':'GET STARTED','contact.title':'Want to try FrånvaroKollen at your school?',
       'contact.lead':'We tailor the solution to your school\'s size, systems and workflows. Send us a message and we\'ll respond within 24 hours with a quote.',
       'contact.cta_primary':'Contact us for a quote →','contact.cta_secondary':'Log in',
