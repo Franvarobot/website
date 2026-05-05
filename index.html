@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FrånvaroKollen — Vikariehantering för skolor</title>
+<meta name="description" content="Vikariehantering som sparar tid varje dag. Markera frånvaro, få vikarieförslag, tilldela täckning och exportera rapporter — allt på ett ställe." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#12325A;
+    --navy-deep:#0C2545;
+    --blue:#1E7BFF;
+    --red:#E63946;
+    --cream:#F6F4EF;
+    --cream-deep:#EFEBE2;
+    --ink:#0E1B30;
+    --muted:#5C6A82;
+    --line:#E4DFD4;
+    --white:#ffffff;
+    --shadow:6px 6px 0 var(--ink);
+    --shadow-sm:4px 4px 0 var(--ink);
+    --radius:14px;
+    --radius-sm:10px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:'Nunito',system-ui,sans-serif;
+    font-weight:400;
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  img,svg{display:block;max-width:100%}
+
+  /* ---------- shared ---------- */
+  .container{max-width:1200px;margin:0 auto;padding:0 24px}
+  .mono{font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:0.02em}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--blue);
+    margin:0 0 14px;
+  }
+  h1,h2,h3{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:-0.01em;line-height:1.15;margin:0}
+  h2{font-size:clamp(28px,3.4vw,42px);color:var(--navy)}
+  h3{font-size:20px;color:var(--navy)}
+  p{margin:0}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 22px;
+    border-radius:var(--radius-sm);
+    font-weight:700;
+    font-size:15px;
+    transition:transform .12s ease, box-shadow .12s ease;
+    border:2px solid var(--ink);
+    box-shadow:var(--shadow-sm);
+  }
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .btn:active{transform:translate(0,0);box-shadow:2px 2px 0 var(--ink)}
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-secondary{background:var(--cream);color:var(--ink)}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,0.4);box-shadow:none}
+  .btn-ghost:hover{background:rgba(255,255,255,0.08);transform:none;box-shadow:none}
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(246,244,239,0.85);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;color:var(--navy)}
+  .brand-logo{height:36px;width:auto;display:block}
+  .brand-logo-light{height:32px}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-weight:600;font-size:14px;color:var(--ink);opacity:0.75;transition:opacity .15s}
+  .nav-links a:hover{opacity:1;color:var(--navy)}
+  .nav-actions{display:flex;align-items:center;gap:12px}
+  .lang{
+    display:flex;
+    background:var(--cream-deep);
+    border-radius:8px;
+    padding:3px;
+    border:1px solid var(--line);
+  }
+  .lang button{
+    padding:5px 10px;
+    font-size:12px;
+    font-weight:700;
+    border-radius:6px;
+    color:var(--muted);
+    transition:all .15s;
+  }
+  .lang button.active{background:var(--navy);color:#fff}
+  .nav-login{
+    padding:10px 18px;
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+    font-weight:700;
+    font-size:14px;
+    transition:background .15s;
+  }
+  .nav-login:hover{background:var(--navy-deep)}
+  .nav-toggle{display:none;width:40px;height:40px;border-radius:8px;background:var(--cream-deep);align-items:center;justify-content:center}
+  .nav-toggle svg{width:20px;height:20px}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:var(--navy);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    border-bottom:3px solid var(--ink);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none;
+  }
+  .hero-inner{
+    display:grid;grid-template-columns:1fr 1fr;gap:64px;
+    align-items:center;
+    padding:72px 0 96px;
+    position:relative;
+  }
+  .hero h1{
+    font-size:clamp(36px,4.6vw,58px);
+    color:#fff;
+    margin-bottom:20px;
+  }
+  .hero h1 .accent{color:var(--blue)}
+  .hero-lead{
+    font-size:18px;
+    color:rgba(255,255,255,0.78);
+    max-width:520px;
+    margin-bottom:32px;
+  }
+  .hero-eyebrow{color:#7FB6FF;margin-bottom:18px}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px}
+  .hero-trust{
+    display:flex;gap:24px;flex-wrap:wrap;
+    padding-top:24px;
+    border-top:1px solid rgba(255,255,255,0.12);
+  }
+  .hero-trust-item{
+    display:flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;
+    color:rgba(255,255,255,0.7);
+  }
+  .hero-trust-item .dot{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+  .hero-trust-item:nth-child(2) .dot{background:#43C77F}
+  .hero-trust-item:nth-child(3) .dot{background:var(--red)}
+
+  .hero-visual{position:relative;display:flex;justify-content:center}
+
+  /* ---------- sections ---------- */
+  section{padding:96px 0}
+  .section-head{max-width:680px;margin:0 auto 56px;text-align:center}
+  .section-head .eyebrow{justify-content:center}
+  .section-head p{margin-top:14px;color:var(--muted);font-size:17px}
+
+  /* features */
+  .features{background:var(--cream)}
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .feature{
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    padding:28px;
+    box-shadow:var(--shadow-sm);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .feature:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .feature-icon{
+    width:48px;height:48px;
+    border-radius:10px;
+    background:var(--cream-deep);
+    border:2px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:18px;
+  }
+  .feature:nth-child(1) .feature-icon{background:#DCEAFF}
+  .feature:nth-child(2) .feature-icon{background:#E5F7EC}
+  .feature:nth-child(3) .feature-icon{background:#FFE5E7}
+  .feature:nth-child(4) .feature-icon{background:#FFF1D6}
+  .feature:nth-child(5) .feature-icon{background:#E8E2FB}
+  .feature:nth-child(6) .feature-icon{background:#DCEAFF}
+  .feature h3{margin-bottom:8px}
+  .feature p{color:var(--muted);font-size:15px}
+
+  /* how it works */
+  .how{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    counter-reset:step;
+  }
+  .step{
+    background:var(--cream);
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    padding:32px 28px;
+    box-shadow:var(--shadow-sm);
+    position:relative;
+  }
+  .step-num{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:13px;
+    color:var(--blue);
+    margin-bottom:14px;
+  }
+  .step h3{margin-bottom:8px}
+  .step p{color:var(--muted);font-size:15px}
+
+  /* security */
+  .security{background:var(--navy);color:#fff;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+  .security .section-head h2{color:#fff}
+  .security .section-head p{color:rgba(255,255,255,0.72)}
+  .security .section-head .eyebrow{color:#7FB6FF}
+  .security-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .sec-card{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:var(--radius);
+    padding:28px;
+  }
+  .sec-card h3{color:#fff;margin-bottom:8px;font-size:18px}
+  .sec-card p{color:rgba(255,255,255,0.7);font-size:14px}
+  .sec-icon{
+    width:40px;height:40px;border-radius:8px;
+    background:rgba(30,123,255,0.18);
+    color:#7FB6FF;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:16px;
+  }
+
+  /* contact */
+  .contact{background:var(--cream)}
+  .contact-card{
+    max-width:780px;
+    margin:0 auto;
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    padding:48px;
+    box-shadow:var(--shadow);
+    text-align:center;
+  }
+  .contact-card h2{margin-bottom:14px}
+  .contact-card p{color:var(--muted);margin-bottom:28px;font-size:17px}
+  .contact-meta{
+    display:flex;justify-content:center;gap:32px;flex-wrap:wrap;
+    margin-top:28px;padding-top:24px;
+    border-top:1px solid var(--line);
+    font-size:14px;color:var(--muted);
+  }
+  .contact-meta strong{color:var(--ink);font-weight:700}
+
+  /* footer */
+  .footer{
+    background:var(--navy-deep);
+    color:rgba(255,255,255,0.7);
+    padding:56px 0 32px;
+    border-top:3px solid var(--ink);
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr;
+    gap:40px;
+    margin-bottom:40px;
+  }
+  .footer h4{
+    font-size:13px;font-weight:700;
+    text-transform:uppercase;letter-spacing:0.08em;
+    color:#fff;margin:0 0 16px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .footer ul{list-style:none;padding:0;margin:0}
+  .footer li{margin-bottom:10px}
+  .footer a{font-size:14px;color:rgba(255,255,255,0.65);transition:color .15s}
+  .footer a:hover{color:#fff}
+  .footer-brand{color:#fff}
+  .footer-brand .brand{margin-bottom:14px}
+  .footer-brand .brand-name{color:#fff}
+  .footer-brand p{font-size:14px;color:rgba(255,255,255,0.6);max-width:300px}
+  .footer-bottom{
+    padding-top:24px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:16px;
+    font-size:13px;color:rgba(255,255,255,0.5);
+  }
+
+  /* mockup styles */
+  .mockup{
+    width:100%;max-width:520px;
+    filter:drop-shadow(8px 8px 0 rgba(0,0,0,0.4));
+  }
+
+  /* ---------- smart suggestions ---------- */
+  .smart{background:#fff;border-bottom:1px solid var(--line)}
+  .smart-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+  }
+  .smart-copy h2{margin-bottom:18px}
+  .smart-copy>p{color:var(--muted);font-size:17px;margin-bottom:28px}
+  .smart-criteria{
+    display:flex;flex-direction:column;gap:18px;
+    margin-bottom:20px;
+  }
+  .smart-criterion{
+    display:flex;gap:14px;align-items:flex-start;
+  }
+  .smart-criterion-icon{
+    flex:none;width:36px;height:36px;border-radius:8px;
+    background:#DCEAFF;
+    border:1.5px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--blue);
+  }
+  .smart-criterion strong{display:block;font-size:15px;color:var(--navy);margin-bottom:2px}
+  .smart-criterion span{font-size:14px;color:var(--muted);line-height:1.5}
+
+  .smart-visual{position:relative}
+  .candidates{
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+  .candidates-head{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:4px;padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .candidates-title{font-weight:800;font-size:14px;color:var(--navy)}
+  .candidates-context{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--muted);
+  }
+
+  /* the suggest button — visual centerpiece */
+  .suggest-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:13px 22px;
+    background:var(--blue);color:#fff;
+    border:2px solid var(--ink);
+    border-radius:10px;
+    box-shadow:4px 4px 0 var(--ink);
+    font-weight:700;font-size:14px;
+    position:relative;
+  }
+  .suggest-btn::after{
+    content:"";
+    position:absolute;
+    inset:-6px;
+    border-radius:14px;
+    border:2px dashed var(--blue);
+    opacity:0.4;
+    animation:pulse 2s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1);opacity:0.4}
+    50%{transform:scale(1.04);opacity:0.15}
+  }
+
+  .candidate{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    margin-bottom:8px;
+    background:#fff;
+  }
+  .candidate.soft{background:#F4F8FF;border-color:#D6E5FF}
+  .candidate-info strong{display:block;font-size:14px;color:var(--navy);font-weight:700;margin-bottom:2px}
+  .candidate-info .meta{font-size:12px;color:var(--muted);font-weight:600}
+  .candidate-pick{
+    font-family:'Nunito',sans-serif;
+    font-size:12px;font-weight:700;
+    color:var(--blue);
+    padding:6px 12px;
+    border:1.5px solid var(--blue);
+    border-radius:6px;
+    background:#fff;
+  }
+
+  /* ---------- analytics ---------- */
+  .analytics{background:var(--cream);border-top:1px solid var(--line)}
+  .analytics-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
+  }
+  .insight{
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    padding:24px;
+    box-shadow:var(--shadow-sm);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .insight:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .insight-head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    margin-bottom:16px;
+  }
+  .insight-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:600;
+    color:var(--blue);
+    text-transform:uppercase;letter-spacing:0.08em;
+  }
+  .insight-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;font-weight:600;
+    background:#E5F7EC;color:#3F8B5C;
+    padding:3px 8px;border-radius:5px;
+  }
+  .insight-pill.warn{background:#FFE5E7;color:var(--red)}
+  .insight-pill.amber{background:#FFF1D6;color:#A8731A}
+  .insight h3{font-size:18px;margin-bottom:6px}
+  .insight p{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5}
+  .insight-viz{
+    background:var(--cream);
+    border-radius:8px;
+    padding:14px;
+    border:1px solid var(--line);
+  }
+
+  /* mini chart bars */
+  .bars{display:flex;align-items:flex-end;gap:6px;height:80px}
+  .bar{flex:1;background:var(--blue);border-radius:3px 3px 0 0;position:relative}
+  .bar.ext{background:var(--red)}
+  .bar-day{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);font-weight:600}
+
+  /* workload distribution rings */
+  .workload{display:flex;flex-direction:column;gap:8px}
+  .workload-row{display:flex;align-items:center;gap:10px;font-size:12px}
+  .workload-row .name{flex:none;width:90px;font-weight:700;color:var(--navy)}
+  .workload-row .track{flex:1;height:10px;background:var(--cream-deep);border-radius:5px;overflow:hidden;position:relative}
+  .workload-row .fill{height:100%;background:var(--blue);border-radius:5px}
+  .workload-row .pct{flex:none;width:36px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--navy);font-size:11px}
+
+  /* heatmap */
+  .heatmap{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+  .heatmap .hm-cell{aspect-ratio:1;border-radius:3px}
+  .heatmap .hm-label{font-size:9px;color:var(--muted);font-weight:600;display:flex;align-items:center;justify-content:center}
+
+  /* cost breakdown */
+  .cost-stack{display:flex;flex-direction:column;gap:10px}
+  .cost-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--cream);border-radius:6px;font-size:12px}
+  .cost-row strong{font-family:'JetBrains Mono',monospace;color:var(--navy);font-weight:700}
+  .cost-row.total{background:var(--navy);color:#fff}
+  .cost-row.total strong{color:#fff}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:960px){
+    .hero-inner{grid-template-columns:1fr;gap:40px;padding:48px 0 64px}
+    .hero-visual{order:-1}
+    .mockup{max-width:420px}
+    .feature-grid,.steps,.security-grid{grid-template-columns:repeat(2,1fr)}
+    .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+    .smart-grid{grid-template-columns:1fr;gap:48px}
+    .smart-criteria{grid-template-columns:1fr 1fr}
+    section{padding:72px 0}
+  }
+  @media (max-width:640px){
+    .nav-links{display:none}
+    .nav-toggle{display:flex}
+    .feature-grid,.steps,.security-grid{grid-template-columns:1fr}
+    .analytics-grid{grid-template-columns:1fr}
+    .smart-criteria{grid-template-columns:1fr}
+    .footer-grid{grid-template-columns:1fr}
+    .contact-card{padding:32px 24px}
+    .hero-ctas{flex-direction:column;align-items:stretch}
+    .hero-ctas .btn{justify-content:center}
+    .container{padding:0 20px}
+  }
+
+  /* mobile menu */
+  .mobile-menu{
+    display:none;
+    background:var(--cream);
+    border-bottom:1px solid var(--line);
+    padding:16px 24px 24px;
+  }
+  .mobile-menu.open{display:block}
+  .mobile-menu a{
+    display:block;padding:10px 0;
+    font-weight:600;font-size:15px;
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-menu a:last-child{border-bottom:none}
+
+  /* hidden lang content */
+  [data-lang]:not(.active){display:none}
+
+  /* small reveal */
+  @media (prefers-reduced-motion:no-preference){
+    .reveal{opacity:0;transform:translateY(12px);transition:opacity .5s ease, transform .5s ease}
+    .reveal.in{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="brand" aria-label="FrånvaroKollen">
+      <svg class="brand-logo" viewBox="0 0 784 248" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path style="fill:#0e70f4" d="m 246.56165,187.85079 c -1.65,-0.42834 -7.9725,-0.83204 -14.05,-0.89712 -11.41915,-0.12226 -13.45,-0.78551 -13.45,-4.39255 0,-1.03083 2.41394,-4.42833 5.36432,-7.55 2.95038,-3.12167 5.91762,-6.7376 6.59387,-8.03541 1.14026,-2.1883 0.80318,-2.77428 -4.64182,-8.06939 -10.16508,-9.88524 -28.58112,-21.01578 -41.44129,-25.04686 -11.65675,-3.65386 -14.87508,-2.33126 -14.87508,6.11307 0,6.1745 -0.98838,6.55752 -3.00391,9.16559 -0.96208,1.24492 -3.373,3.81393 -4.46371,4.7902 -1.55276,1.38986 -11.58965,1.90704 -36.44806,1.90704 -27.04712,0 -28.12543,-0.22334 -32.555646,-6.74298 l -2.528678,-3.72129 V 116.83536 88.29963 l 2.528678,-3.721284 c 4.497186,-6.618207 5.162656,-6.742985 35.961506,-6.742985 25.51076,0 27.88153,0.148985 31.46544,1.977361 5.81629,2.967247 8.2515,7.07298 8.99294,15.161983 0.45162,4.927085 1.19431,7.447965 2.61195,8.865615 2.00413,2.00412 13.94309,7.36065 24.93949,11.18933 15.22425,5.30072 37.81004,19.3314 49.22028,30.5765 5.0202,4.94754 5.49144,4.86377 13.63787,-2.42444 3.6692,-3.28265 5.67176,-4.34635 8.18262,-4.34635 2.56066,0 3.49524,0.51694 4.06781,2.25 0.87922,2.66126 0.70095,20.77358 -0.35678,36.25 l -0.7518,11 -11,0.14711 c -6.05,0.0809 -12.35,-0.20335 -14,-0.63168 z"/>
+        <path style="fill:#e4223d" d="m 242.06165,246.50414 c -10.34393,-4.83591 -11.48206,-8.21984 -11.49219,-34.16878 l -0.008,-20 11,0.18362 c 6.05,0.101 15.28171,0.47833 20.5149,0.83852 8.95234,0.61618 9.63228,0.52537 11.5,-1.53574 1.60399,-1.77007 2.08645,-4.10122 2.51299,-12.14223 0.38364,-7.23223 0.93016,-10.20599 2,-10.88257 0.80966,-0.51204 5.81607,-0.93787 11.12536,-0.94629 l 9.65326,0.92272 5.96916,1.68494 4.48395,5.90604 -0.0884,8.56367 c -0.0599,5.80074 -0.0427,50.75817 -1.74588,54.05172 -1.70678,3.30055 -6.51421,6.85561 -9.27068,6.85561 -1.12014,0 -2.31473,0.45 -2.65465,1 -0.91311,1.47744 -50.28511,1.17178 -53.5,-0.33122 z"/>
+        <path style="fill:#355b84" d="m 103.2317,247.58282 c -0.41339,-0.18131 -1.94268,-1.10106 -3.57188,-1.93548 -1.6292,-0.83441 -4.662891,-3.10372 -6.194729,-5.66192 l -3.011454,-5.02917 -0.663283,-28.3938 0.110547,-28.33853 3.916714,-4.96384 c 5.464665,-6.92564 4.347654,-6.18505 36.578215,-6.18822 27.32374,-0.003 29.8545,0.50065 32.97142,2.40099 1.91004,1.16452 4.28536,3.85962 5.39386,6.30153 1.73514,3.82234 2.14311,7.09018 2.16296,30.8431 0.0243,29.09152 -0.40013,30.87804 -6.29249,36.0516 -4.48692,3.93957 -6.10994,4.76834 -10.58906,4.8195 -2.29293,0.0262 -10.93877,0.37243 -13.14101,0.35182 -3.97912,-0.0372 -13.11913,-0.12515 -17.50381,-0.0597 -2.74852,0.041 -3.22724,-0.1248 -5.14161,-0.11054 -2.48363,0.0185 -13.70464,0.49154 -15.02439,-0.0873 z m -74.277929,-4.1018 C 21.236993,240.30663 16.765542,237.40108 13.003868,233.11677 9.155134,228.73331 4.2659891,218.76258 3.4157742,213.5632 3.0765163,211.48851 2.4080501,209.54945 1.9302938,209.25418 0.5008567,208.37074 0.851043,178.01313 2.3116461,176.19479 c 3.4445584,-4.2882 7.4926389,-7.40212 10.2180329,-7.86004 1.667582,-0.28019 15.181967,-0.39467 30.031967,-0.25441 l 27,0.25502 3.659695,2.79981 c 6.534181,4.9989 6.840305,6.52648 6.840305,34.13344 0,26.31898 1.128551,30.08332 -3.734356,35.37304 -4.643017,5.05054 -10.815014,6.47881 -27.078318,6.47688 -13.375401,-0.002 -15.294696,-1.58049 -20.295201,-3.63751 z M 425.50528,211.97527 c -4.60779,-0.82119 -11.87958,-4.8099 -15.14478,-8.3072 -3.53838,-3.7899 -6.37924,-11.38465 -6.96287,-18.61447 -0.4373,-5.41727 -0.1152,-7.84758 1.66336,-12.5502 2.84664,-7.52669 6.7833,-11.92534 13.70247,-15.31058 4.63075,-2.26562 6.85286,-2.71441 13.23621,-2.67331 12.58331,0.081 21.68782,5.50144 26.13323,15.55857 3.27131,7.40088 3.33179,19.33715 0.13115,25.88456 -6.03408,12.34368 -18.67497,18.5226 -32.75877,16.01263 z m 12.0222,-13.56119 c 4.15766,-1.73718 8.51936,-8.04939 9.23166,-13.35998 0.64889,-4.83789 -2.404,-12.32511 -5.98126,-14.66902 -6.90471,-4.52414 -14.61954,-3.70175 -19.71492,2.10157 -6.77228,7.7132 -4.17116,20.98005 5.01862,25.59716 4.22213,2.12127 6.9697,2.20055 11.4459,0.33027 z m 106.26757,13.39215 c -7.25436,-1.82295 -12.7916,-6.32119 -16.58239,-13.47087 -2.38224,-4.49307 -2.65101,-6.06454 -2.65101,-15.5 0,-9.76519 0.19954,-10.83316 2.85128,-15.26068 5.49948,-9.18227 12.15944,-12.74907 23.76474,-12.7274 5.35285,0.01 7.35309,0.54975 12.38398,3.34171 7.96079,4.41794 11.51492,9.96309 12.24924,19.11124 0.43423,5.40959 0.21037,6.92228 -1.26584,8.55348 -1.64876,1.82186 -3.11391,1.98165 -18.16977,1.98165 -13.94756,0 -16.46561,0.23248 -16.97789,1.56746 -0.87137,2.27076 1.55031,6.199 5.21957,8.46672 4.31548,2.66712 12.25004,2.61593 17.60025,-0.11354 5.00245,-2.55206 8.51975,-1.90483 9.93933,1.82894 1.58973,4.18132 -0.31849,7.00562 -6.71049,9.93197 -6.22138,2.84825 -15.51586,3.83102 -21.651,2.28932 z m 17.87499,-36.39273 c 0.81418,-2.12172 -1.28921,-5.36173 -4.58837,-7.06779 -3.88625,-2.00965 -9.73396,-1.90851 -13.94513,0.2412 -4.46103,2.27727 -5.8851,4.56728 -4.14446,6.66463 1.82459,2.19849 21.84161,2.34145 22.67796,0.16196 z m -220.60839,34.42186 c -1.92003,-1.92003 -2,-3.33333 -2,-35.34501 0,-31.03412 0.12674,-33.45971 1.82874,-35 2.37456,-2.14895 8.51203,-2.15272 10.29882,-0.006 0.95058,1.1419 1.52613,5.80469 1.87244,15.16952 0.28439,7.6905 0.93121,13.65381 1.5,13.82917 0.55,0.16957 8.397,-6.88171 17.43778,-15.66952 15.3638,-14.93422 16.68536,-15.97816 20.22695,-15.97816 2.8936,0 4.15992,0.56584 5.35785,2.39411 0.94746,1.44601 1.32622,3.36012 0.95644,4.83346 -0.33673,1.34164 -5.53226,7.34411 -11.54563,13.33883 -6.01336,5.99472 -10.93339,11.3156 -10.93339,11.82417 0,0.50858 1.74409,3.21625 3.87575,6.01706 10.63303,13.97079 18.17266,25.33351 18.70985,28.19698 0.32861,1.75164 0.0933,4.12687 -0.52293,5.27829 -1.37784,2.57452 -5.46616,3.71172 -8.9531,2.49038 -2.35811,-0.82596 -10.60042,-11.00216 -20.83896,-25.7284 -1.77617,-2.55468 -3.80117,-4.63726 -4.5,-4.62794 -0.69884,0.009 -3.40811,2.02204 -6.02061,4.4727 l -4.75,4.45576 v 8.39244 c 0,6.97621 -0.34975,8.83708 -2.07258,11.0273 -2.53576,3.2237 -7.0499,3.51238 -9.92742,0.63486 z m 133.01426,0.21263 c -2.19611,-1.7783 -2.20808,-1.96781 -2.36078,-37.38673 -0.14538,-33.72074 -0.053,-35.71088 1.75151,-37.71263 2.52083,-2.79645 7.66181,-2.80141 10.19002,-0.01 1.7131,1.89155 1.94042,4.13285 2.25675,22.25 0.19347,11.08061 0.0313,27.05878 -0.36046,35.50703 -0.60908,13.13597 -0.98587,15.63411 -2.60176,17.25 -2.37722,2.37722 -6.01401,2.41909 -8.87528,0.10217 z m 28.05832,-0.84749 c -2.00636,-2.55067 -2.07258,-3.74388 -2.07258,-37.34501 0,-31.78983 0.14724,-34.84284 1.75,-36.28723 3.0662,-2.76322 6.53378,-3.04882 9.00979,-0.74206 2.23893,2.08588 2.24021,2.10737 2.24021,37.54812 0,34.12771 -0.0752,35.53624 -2,37.46104 -2.79084,2.79084 -6.43671,2.53157 -8.92742,-0.63486 z m 87.14993,1.07816 c -2.1954,-1.53772 -2.22232,-1.85797 -2.2072,-26.25 0.008,-13.58132 0.34592,-25.18843 0.75,-25.7936 2.44475,-3.66134 8.79414,-3.99274 12.50055,-0.65245 1.62358,1.46321 2.14727,1.39819 6.5,-0.80697 8.14413,-4.12595 19.377,-2.85986 24.46017,2.75699 3.90789,4.31817 4.77397,9.73741 4.77397,29.87175 0,18.82861 -0.0563,19.35697 -2.22251,20.87428 -2.97791,2.08581 -6.36994,1.96425 -8.64397,-0.30978 -1.62424,-1.62424 -1.93011,-3.99272 -2.35683,-18.25 -0.30725,-10.26554 -0.96898,-17.39244 -1.77208,-19.08533 -2.70557,-5.70319 -12.49134,-7.31146 -17.00764,-2.79516 -3.01263,3.01263 -3.90198,8.49303 -3.89351,23.99266 0.007,13.66544 -0.11616,14.59617 -2.15855,16.25 -2.67864,2.16903 -5.80663,2.2399 -8.7224,0.19761 z M 10.382499,155.32822 C 8.737735,154.63665 6.4225821,152.78034 5.2377155,151.20309 4.0528489,149.62584 2.6285151,147.79185 2.0725293,147.12757 0.8892172,145.71376 0.6403029,87.835361 1.8175347,87.835361 c 0.4157388,0 1.3713559,-1.390437 2.1235938,-3.08986 0.7522378,-1.699423 2.7745879,-3.947741 4.4941115,-4.996262 2.877465,-1.754604 5.346518,-1.9067 31.008372,-1.91014 26.81456,-0.0036 28.015548,0.07882 31.371285,2.152779 1.919125,1.186085 4.78474,4.199186 6.368034,6.695781 l 2.878715,4.539263 v 27.301338 27.30134 l -3.674849,4.06762 c -6.294978,6.96778 -6.063324,6.92414 -36.093841,6.79984 -19.14434,-0.0793 -27.783754,-0.47463 -29.910457,-1.36884 z M 247.05036,132.08536 c -10.41941,-8.93849 -19.32788,-14.79968 -31.48871,-20.71749 -7.15,-3.4794 -16.05251,-7.31428 -19.78336,-8.52197 -3.73085,-1.2077 -8.11835,-3.31912 -9.75,-4.69207 -2.44861,-2.060363 -2.96664,-3.25312 -2.96664,-6.830637 0,-3.251312 0.6755,-5.137166 2.70331,-7.547081 4.75223,-5.647703 6.53018,-5.940908 36.01457,-5.939197 30.99521,0.0018 32.17535,0.264065 36.0209,8.005044 1.99127,4.008345 2.31256,6.627972 2.90602,23.693981 l 0.66724,19.18738 -3.55602,3.55602 c -1.95581,1.95581 -4.19502,3.55602 -4.97602,3.55602 -0.781,0 -3.38708,-1.6875 -5.79129,-3.75 z m 209.29292,-23.29133 c -11.67574,-2.33489 -19.28746,-13.48854 -19.27605,-28.245689 0.007,-8.769117 1.06776,-12.860234 4.90389,-18.909173 2.32001,-3.658277 4.31182,-5.284513 9.51249,-7.766562 3.61792,-1.726675 6.57804,-3.356382 6.57804,-3.621571 0,-0.265189 -1.14801,-2.747645 -2.55113,-5.51657 -2.12618,-4.195819 -2.43481,-5.810035 -1.85285,-9.690824 1.68877,-11.261568 13.74782,-13.973283 18.65243,-4.194369 2.37578,4.736896 2.20231,7.84045 -0.74845,13.390064 -1.375,2.58602 -2.5,5.360323 -2.5,6.165118 0,0.804795 1.61057,2.231292 3.57905,3.169993 3.3778,1.61076 3.74784,1.60985 6.58104,-0.01618 3.95678,-2.270879 7.1178,-2.178314 9.33657,0.273406 1.62414,1.794646 1.81658,4.294895 1.90499,24.75 0.0541,12.514528 -0.25172,24.007107 -0.67958,25.539057 -1.14929,4.11501 -5.04286,5.27059 -9.65633,2.86591 -3.50787,-1.8284 -3.79473,-1.83479 -7.11054,-0.15843 -4.41479,2.23197 -11.28956,3.04251 -16.67357,1.96582 z M 472.1209,94.132052 c 4.12957,-3.474802 5.94169,-7.905007 5.93701,-14.514572 -0.0128,-18.132962 -22.458,-21.673881 -27.98912,-4.415527 -1.59748,4.984509 -0.77747,10.885419 2.09527,15.077921 3.1738,4.631848 6.62376,6.497862 12.07086,6.528878 3.64367,0.02075 5.3811,-0.56898 7.88598,-2.6767 z m -4.71103,-54.114469 c 0.1702,-1.459349 -0.28317,-5.861638 -1.18962,-6.613951 -1.34475,-1.116041 -3.74027,-1.344647 -5.1072,0.02229 -1.34877,1.348767 -1.70021,5.11343 -0.71517,7.275347 1.51306,3.320815 6.59625,2.881166 7.01202,-0.683684 z m 169.64531,68.935887 c -11.22301,-3.64874 -17.8113,-12.839027 -18.76563,-26.17696 -0.90597,-12.662103 4.15921,-23.121138 13.71277,-28.315368 4.78733,-2.602849 5.96024,-2.828294 12.42289,-2.387796 3.92504,0.267533 8.8141,1.302083 10.86457,2.299001 3.49056,1.697074 3.84605,1.705855 5.57874,0.137796 1.01784,-0.92113 3.48685,-1.674782 5.48669,-1.674782 5.82793,0 6.08756,1.248713 5.8105,27.945846 -0.13383,12.895216 -0.65012,24.205953 -1.14731,25.134973 -1.38803,2.59355 -5.41634,3.14453 -9.33343,1.27659 -3.26926,-1.559 -3.69839,-1.54842 -7.29841,0.17992 -4.20554,2.01905 -13.40301,2.85794 -17.33138,1.58078 z M 651.4413,95.450093 c 4.22646,-1.76593 7.53717,-7.116787 8.27906,-13.380846 1.56919,-13.249405 -10.70405,-22.721311 -20.70676,-15.980488 -5.06021,3.410072 -7.43967,8.223422 -7.34941,14.866911 0.1658,12.20318 9.27784,18.8813 19.77711,14.494423 z m 93.4409,13.049677 c -13.42618,-3.78561 -21.607,-18.238582 -19.01978,-33.602068 1.25433,-7.448514 4.62277,-12.876816 11.01671,-17.753639 5.43585,-4.146061 11.07998,-5.659004 18.81885,-5.044506 7.33837,0.582697 15.17692,4.482034 19.50358,9.702182 4.15641,5.014746 6.20378,12.804599 5.63873,21.454238 -0.513,7.852925 -2.89762,13.544522 -7.67736,18.324263 -6.6582,6.65819 -18.73112,9.61211 -28.28073,6.91953 z m 15.88911,-13.628918 c 4.81794,-2.937651 7.61027,-9.164056 7.06399,-15.751483 -0.4963,-5.984675 -2.61549,-9.52015 -7.8656,-13.122311 -2.6399,-1.811265 -4.34538,-2.23571 -7.56671,-1.883132 -5.0056,0.547868 -9.78509,3.745093 -11.99929,8.026869 -2.26231,4.37484 -2.10459,12.704149 0.31916,16.854177 4.29335,7.351239 13.29965,9.990838 20.04845,5.87588 z m -419.39935,11.551588 -2.81031,-2.42074 0.24881,-30.333171 c 0.13684,-16.683243 0.24934,-31.120668 0.25,-32.083168 6.5e-4,-0.9625 0.90119,-2.65 2.00119,-3.75 1.86563,-1.865625 3.33333,-2 21.84501,-2 17.95554,0 20.00259,0.174118 21.5,1.828741 0.91025,1.005807 1.65499,2.961063 1.65499,4.345012 0,4.712423 -2.30699,5.508905 -17.90502,6.181659 -7.92276,0.341715 -14.65254,0.868812 -14.95505,1.171328 -0.30252,0.302516 -0.73537,3.460752 -0.9619,7.018302 -0.26957,4.233496 0.0163,6.98422 0.8275,7.961615 0.98146,1.182598 3.91169,1.493343 14.08173,1.493343 11.67342,0 12.9366,0.176062 13.87756,1.934259 1.64413,3.072087 1.21025,6.597327 -1.06546,8.656815 -1.75676,1.589848 -4.00763,1.955904 -13.75,2.236147 -9.24519,0.265941 -11.90733,0.667361 -12.89936,1.945068 -0.8285,1.067094 -1.25,5.358836 -1.25,12.727711 0,12.030789 -0.62574,13.825399 -5.18969,14.883969 -2.00302,0.46459 -3.40714,0.006 -5.5,-1.79689 z m 164.93969,0.89089 c -2.23037,-1.57749 -2.25,-1.80838 -2.25,-26.463244 0,-21.277456 0.2271,-25.098966 1.57143,-26.443296 2.19234,-2.192337 6.66613,-1.959006 9.80684,0.511477 l 2.64798,2.082906 5.18322,-2.582906 c 12.36208,-6.160284 25.49053,-0.713664 27.86147,11.55893 0.46308,2.39699 0.86156,11.795536 0.88551,20.885658 0.0507,19.245685 -0.51665,20.972505 -6.89071,20.972505 -6.11598,0 -6.50169,-1.11372 -7.06574,-20.402052 -0.31607,-10.808353 -0.95206,-17.886932 -1.72889,-19.242763 -1.54625,-2.698704 -6.46983,-4.46544 -10.30616,-3.698175 -3.39985,0.67997 -7.8019,4.71357 -8.45751,7.749612 -0.24863,1.151358 -0.57701,8.940556 -0.72975,17.309329 -0.2981,16.334079 -0.66498,17.524889 -5.77769,18.752919 -1.53801,0.36941 -3.36579,-0.0119 -4.75,-0.9909 z m 75.29471,-0.72797 c -1.58408,-1.38857 -5.66998,-9.332887 -10.67207,-20.749999 -11.46532,-26.169245 -11.51132,-26.302841 -10.11277,-29.372314 0.64466,-1.414881 2.35159,-2.868541 3.79317,-3.230355 4.706,-1.18113 7.40931,2.110839 13.62625,16.593465 3.13918,7.312852 6.1528,13.741296 6.69694,14.285432 0.54413,0.544135 1.58208,0.75568 2.30655,0.470098 0.72447,-0.285581 3.94247,-7.056374 7.1511,-15.046206 5.11615,-12.739747 6.19819,-14.677869 8.79506,-15.753528 2.22363,-0.921058 3.57264,-0.947962 5.41612,-0.108015 4.33219,1.973878 3.32734,6.539831 -6.18168,28.089147 -10.23971,23.205185 -10.98333,24.578085 -14.0757,25.987065 -3.28065,1.49476 -3.81405,1.40262 -6.74297,-1.16479 z m 107.23355,1.56612 c -2.93834,-0.77119 -3.7669,-7.05939 -3.77268,-28.63186 -0.007,-24.65768 0.55833,-26.634362 7.62198,-26.668946 1.72015,-0.0084 3.68775,0.659687 4.37244,1.484687 1.6693,2.011383 3.18384,1.893304 8.01509,-0.624881 3.09794,-1.614741 5.19143,-1.999231 8.71998,-1.601513 4.94757,0.557663 7.26493,2.555277 7.26493,6.262536 0,3.230483 -3.0693,5.386921 -8.57308,6.023295 -8.21072,0.949364 -9.33239,1.366912 -11.16427,4.155957 -1.44763,2.204024 -1.85201,5.702372 -2.26265,19.574605 -0.48115,16.25426 -0.58899,16.96294 -2.86078,18.80048 -2.31188,1.86996 -3.89906,2.13423 -7.36096,1.22564 z m -291.99308,-2.56612 c -1.88831,-3.30592 -2.37659,-41.841844 -0.5984,-47.226975 1.77127,-5.364156 5.13169,-6.597046 10.45774,-3.836799 l 3.85548,1.998117 4.40728,-2.342171 c 5.76888,-3.065763 11.05442,-3.07629 13.91841,-0.02772 2.73852,2.915028 2.77175,6.088107 0.0918,8.768041 -1.767,1.767001 -2.81593,1.98162 -6.92374,1.416651 -4.55176,-0.626026 -5.07004,-0.456319 -8.66751,2.838113 l -3.82624,3.503953 -0.26798,14.829396 c -0.14739,8.156167 -0.48557,15.810424 -0.7515,17.009464 -0.75075,3.38493 -3.30294,5.31993 -7.01676,5.31993 -2.47161,0 -3.7425,-0.61119 -4.67858,-2.25 z M 102.65151,64.003486 C 98.32484,63.510069 95.46025,61.214784 93.218136,56.444894 91.507541,52.805758 91.154327,49.573107 90.816433,34.464244 90.36889,14.452475 91.05425,11.438779 97.169348,6.5289156 99.03511,5.030878 101.10516,3.3619946 101.76944,2.8202858 c 1.57819,-1.2869742 57.29221,-1.337846 57.29221,-0.052313 0,0.5129368 0.90335,1.2193259 2.00745,1.5697535 1.1041,0.3504276 3.5791,2.6954631 5.5,5.2111907 l 3.49255,4.574049 V 33.83128 c 0,18.791124 -0.10487,19.86393 -2.2534,23.052132 -4.53525,6.729857 -5.41498,6.909026 -35.32671,7.194778 -14.80594,0.141444 -28.22945,0.107827 -29.83003,-0.0747 z M 7.7116461,60.539817 c -6.6679057,-6.975994 -6.65,-6.926946 -6.65,-18.215887 0,-5.768713 0.4142451,-10.488569 0.9205447,-10.488569 0.5062996,0 1.2122482,-1.328117 1.5687747,-2.951371 C 4.5914869,24.146527 11.363323,14.553946 15.630191,11.773276 20.120503,8.84699 29.023493,5.1467025 33.811646,4.2166451 c 1.7875,-0.3472064 3.25,-1.0250344 3.25,-1.5062844 0,-0.48125 6.528896,-0.875 14.508659,-0.875 h 14.508659 l 4.241341,3.0670796 c 2.332737,1.6868937 5.478841,4.9046097 6.991341,7.1504807 2.746183,4.077734 2.75,4.108312 2.75,22.031792 0,20.319575 -0.704638,23.118807 -6.875053,27.311713 l -3.589216,2.438935 H 40.229511 10.861646 Z M 189.48161,61.949683 c -5.73219,-3.495485 -6.41996,-6.609228 -6.41996,-29.065111 0,-21.989761 0.27334,-23.302876 5.89081,-28.2992113 l 3.09187,-2.75 h 17.50866 c 9.62976,0 17.50866,0.3452889 17.50866,0.7673087 0,0.4220197 2.64503,1.8179109 5.87784,3.1019803 6.61506,2.6274983 15.60338,9.2729343 19.56209,14.4630623 3.97002,5.204972 6.79673,14.172297 7.32291,23.230893 0.39509,6.801908 0.14178,8.703394 -1.61934,12.155474 -1.14824,2.250727 -3.28594,5.034767 -4.75046,6.186756 -2.5646,2.017316 -3.73601,2.094388 -31.7779,2.090788 -26.72199,-0.0034 -29.36831,-0.158119 -32.19518,-1.88194 z"/>
+      </svg>
+    </a>
+
+    <nav class="nav-links" aria-label="Huvudmeny">
+      <a href="#smart" data-i18n="nav.smart">Vikarieförslag</a>
+      <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
+      <a href="#analys" data-i18n="nav.analytics">Analys</a>
+      <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
+      <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="lang" role="group" aria-label="Språk">
+        <button class="active" data-lang-btn="sv" aria-pressed="true">SV</button>
+        <button data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="nav-login" href="#login" data-i18n="nav.login">Logga in</a>
+      <button class="nav-toggle" aria-label="Öppna meny" id="navToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#smart" data-i18n="nav.smart">Vikarieförslag</a>
+    <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
+    <a href="#analys" data-i18n="nav.analytics">Analys</a>
+    <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
+    <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
+    <a href="#login" data-i18n="nav.login">Logga in</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">VIKARIEHANTERING FÖR SKOLOR</p>
+      <h1 data-i18n="hero.title">Vikariehantering som <span class="accent">sparar tid</span> varje dag</h1>
+      <p class="hero-lead" data-i18n="hero.lead">Markera frånvaro, få smarta vikarieförslag, tilldela täckning och exportera professionella rapporter — allt på ett ställe.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#login" data-i18n="hero.cta_primary">Logga in →</a>
+        <a class="btn btn-ghost" href="#kontakt" data-i18n="hero.cta_secondary">Boka demo</a>
+      </div>
+      <div class="hero-trust">
+        <span class="hero-trust-item"><span class="dot"></span><span data-i18n="hero.trust_1">All data inom EU</span></span>
+        <span class="hero-trust-item"><span class="dot"></span><span data-i18n="hero.trust_2">GDPR-kompatibel</span></span>
+        <span class="hero-trust-item"><span class="dot"></span><span data-i18n="hero.trust_3">SSO via Google &amp; Microsoft</span></span>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <!-- Stylised mockup of the Daglig vikarie grid -->
+      <svg class="mockup" viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Förhandsvisning av FrånvaroKollen">
+        <!-- card frame -->
+        <rect x="6" y="6" width="508" height="408" rx="14" fill="#ffffff" stroke="#0E1B30" stroke-width="2.5"/>
+
+        <!-- top bar -->
+        <rect x="6" y="6" width="508" height="48" rx="14" fill="#F6F4EF"/>
+        <rect x="6" y="42" width="508" height="14" fill="#F6F4EF"/>
+        <line x1="6" y1="54" x2="514" y2="54" stroke="#E4DFD4" stroke-width="1.5"/>
+
+        <!-- mini logo (F mark scaled into 22x22 area) -->
+        <g transform="translate(20,18) scale(0.078)">
+          <path style="fill:#0e70f4" d="m 246.56165,187.85079 c -1.65,-0.42834 -7.9725,-0.83204 -14.05,-0.89712 -11.41915,-0.12226 -13.45,-0.78551 -13.45,-4.39255 0,-1.03083 2.41394,-4.42833 5.36432,-7.55 2.95038,-3.12167 5.91762,-6.7376 6.59387,-8.03541 1.14026,-2.1883 0.80318,-2.77428 -4.64182,-8.06939 -10.16508,-9.88524 -28.58112,-21.01578 -41.44129,-25.04686 -11.65675,-3.65386 -14.87508,-2.33126 -14.87508,6.11307 0,6.1745 -0.98838,6.55752 -3.00391,9.16559 -0.96208,1.24492 -3.373,3.81393 -4.46371,4.7902 -1.55276,1.38986 -11.58965,1.90704 -36.44806,1.90704 -27.04712,0 -28.12543,-0.22334 -32.555646,-6.74298 l -2.528678,-3.72129 V 116.83536 88.29963 l 2.528678,-3.721284 c 4.497186,-6.618207 5.162656,-6.742985 35.961506,-6.742985 25.51076,0 27.88153,0.148985 31.46544,1.977361 5.81629,2.967247 8.2515,7.07298 8.99294,15.161983 0.45162,4.927085 1.19431,7.447965 2.61195,8.865615 2.00413,2.00412 13.94309,7.36065 24.93949,11.18933 15.22425,5.30072 37.81004,19.3314 49.22028,30.5765 5.0202,4.94754 5.49144,4.86377 13.63787,-2.42444 3.6692,-3.28265 5.67176,-4.34635 8.18262,-4.34635 2.56066,0 3.49524,0.51694 4.06781,2.25 0.87922,2.66126 0.70095,20.77358 -0.35678,36.25 l -0.7518,11 -11,0.14711 c -6.05,0.0809 -12.35,-0.20335 -14,-0.63168 z"/>
+          <path style="fill:#e4223d" d="m 242.06165,246.50414 c -10.34393,-4.83591 -11.48206,-8.21984 -11.49219,-34.16878 l -0.008,-20 11,0.18362 c 6.05,0.101 15.28171,0.47833 20.5149,0.83852 8.95234,0.61618 9.63228,0.52537 11.5,-1.53574 1.60399,-1.77007 2.08645,-4.10122 2.51299,-12.14223 0.38364,-7.23223 0.93016,-10.20599 2,-10.88257 0.80966,-0.51204 5.81607,-0.93787 11.12536,-0.94629 l 9.65326,0.92272 5.96916,1.68494 4.48395,5.90604 -0.0884,8.56367 c -0.0599,5.80074 -0.0427,50.75817 -1.74588,54.05172 -1.70678,3.30055 -6.51421,6.85561 -9.27068,6.85561 -1.12014,0 -2.31473,0.45 -2.65465,1 -0.91311,1.47744 -50.28511,1.17178 -53.5,-0.33122 z"/>
+        </g>
+        <text x="55" y="34" font-family="Nunito,sans-serif" font-weight="800" font-size="13" fill="#355b84">Daglig vikarie</text>
+
+        <!-- date pill -->
+        <rect x="380" y="20" width="116" height="22" rx="6" fill="#ffffff" stroke="#E4DFD4"/>
+        <text x="392" y="35" font-family="JetBrains Mono,monospace" font-size="11" fill="#5C6A82">Tis · V.19</text>
+
+        <!-- segment counts -->
+        <circle cx="32" cy="78" r="4" fill="#43C77F"/>
+        <text x="42" y="82" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#0E1B30">14 lediga</text>
+        <circle cx="120" cy="78" r="4" fill="#1E7BFF"/>
+        <text x="130" y="82" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#0E1B30">15 undervisar</text>
+
+        <!-- staff tile generator (hand-laid for clarity) -->
+        <!-- row 1 - lediga (green) -->
+        <g font-family="Nunito,sans-serif">
+          <!-- tile 1 -->
+          <rect x="22" y="98" width="116" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="32" y="118" font-size="12" font-weight="700" fill="#12325A">M. Fredriksson</text>
+          <text x="32" y="135" font-size="10" font-weight="600" fill="#3F8B5C">1h 16m</text>
+
+          <rect x="146" y="98" width="116" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="156" y="118" font-size="12" font-weight="700" fill="#12325A">S. Sjöberg</text>
+          <text x="156" y="135" font-size="10" font-weight="600" fill="#3F8B5C">1h 6m</text>
+
+          <rect x="270" y="98" width="116" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="280" y="118" font-size="12" font-weight="700" fill="#12325A">E. Nyström</text>
+          <text x="280" y="135" font-size="10" font-weight="600" fill="#3F8B5C">1h 4m</text>
+
+          <rect x="394" y="98" width="100" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="404" y="118" font-size="12" font-weight="700" fill="#12325A">H. Dahlström</text>
+          <text x="404" y="135" font-size="10" font-weight="600" fill="#3F8B5C">43m</text>
+
+          <!-- row 2 - lediga -->
+          <rect x="22" y="160" width="116" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="32" y="180" font-size="12" font-weight="700" fill="#12325A">U. Dahlström</text>
+          <text x="32" y="197" font-size="10" font-weight="600" fill="#3F8B5C">34m</text>
+
+          <rect x="146" y="160" width="116" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="156" y="180" font-size="12" font-weight="700" fill="#12325A">I. Eriksson</text>
+          <text x="156" y="197" font-size="10" font-weight="600" fill="#3F8B5C">23m</text>
+
+          <rect x="270" y="160" width="116" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="280" y="180" font-size="12" font-weight="700" fill="#12325A">J. Bergström</text>
+          <text x="280" y="197" font-size="10" font-weight="600" fill="#3F8B5C">23m</text>
+
+          <rect x="394" y="160" width="100" height="54" rx="8" fill="#E5F7EC" stroke="#B4E2C5" stroke-width="1.2"/>
+          <text x="404" y="180" font-size="12" font-weight="700" fill="#12325A">P. Svensson</text>
+          <text x="404" y="197" font-size="10" font-weight="600" fill="#3F8B5C">23m</text>
+
+          <!-- row 3 - undervisar (cream/grey) -->
+          <rect x="22" y="222" width="116" height="54" rx="8" fill="#F6F4EF" stroke="#E4DFD4" stroke-width="1.2"/>
+          <text x="32" y="242" font-size="12" font-weight="700" fill="#12325A">A. Lindström</text>
+          <text x="32" y="259" font-size="10" font-weight="600" fill="#5C6A82">Undervisar nu</text>
+
+          <rect x="146" y="222" width="116" height="54" rx="8" fill="#F6F4EF" stroke="#E4DFD4" stroke-width="1.2"/>
+          <text x="156" y="242" font-size="12" font-weight="700" fill="#12325A">C. Pettersson</text>
+          <text x="156" y="259" font-size="10" font-weight="600" fill="#5C6A82">Undervisar nu</text>
+
+          <rect x="270" y="222" width="116" height="54" rx="8" fill="#F6F4EF" stroke="#E4DFD4" stroke-width="1.2"/>
+          <text x="280" y="242" font-size="12" font-weight="700" fill="#12325A">H. Karlsson</text>
+          <text x="280" y="259" font-size="10" font-weight="600" fill="#5C6A82">Undervisar nu</text>
+
+          <rect x="394" y="222" width="100" height="54" rx="8" fill="#F6F4EF" stroke="#E4DFD4" stroke-width="1.2"/>
+          <text x="404" y="242" font-size="12" font-weight="700" fill="#12325A">L. Eklund</text>
+          <text x="404" y="259" font-size="10" font-weight="600" fill="#5C6A82">Undervisar nu</text>
+        </g>
+
+        <!-- KPI strip at bottom -->
+        <rect x="22" y="296" width="472" height="100" rx="10" fill="#12325A"/>
+        <rect x="22" y="296" width="472" height="4" fill="#1E7BFF"/>
+
+        <!-- KPI 1 -->
+        <text x="40" y="324" font-family="JetBrains Mono,monospace" font-size="10" fill="#7FB6FF" font-weight="600">TÄCKNINGSGRAD</text>
+        <text x="40" y="358" font-family="Nunito,sans-serif" font-size="28" fill="#fff" font-weight="800">100<tspan font-size="16">%</tspan></text>
+        <text x="40" y="378" font-family="Nunito,sans-serif" font-size="10" fill="rgba(255,255,255,0.6)">1 intern · 0 extern</text>
+
+        <line x1="170" y1="316" x2="170" y2="380" stroke="rgba(255,255,255,0.12)"/>
+
+        <!-- KPI 2 -->
+        <text x="190" y="324" font-family="JetBrains Mono,monospace" font-size="10" fill="#7FB6FF" font-weight="600">FRÅNVARANDE</text>
+        <text x="190" y="358" font-family="Nunito,sans-serif" font-size="28" fill="#fff" font-weight="800">3</text>
+        <text x="190" y="378" font-family="Nunito,sans-serif" font-size="10" fill="rgba(255,255,255,0.6)">3 undervisande · 0 övrig</text>
+
+        <line x1="320" y1="316" x2="320" y2="380" stroke="rgba(255,255,255,0.12)"/>
+
+        <!-- KPI 3 -->
+        <text x="340" y="324" font-family="JetBrains Mono,monospace" font-size="10" fill="#FF8993" font-weight="600">EXTERN KOSTNAD</text>
+        <text x="340" y="358" font-family="Nunito,sans-serif" font-size="28" fill="#fff" font-weight="800">0<tspan font-size="14"> kr</tspan></text>
+        <text x="340" y="378" font-family="Nunito,sans-serif" font-size="10" fill="rgba(255,255,255,0.6)">Inga externa vikarier</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SMART SUGGESTIONS ============ -->
+<section class="smart" id="smart">
+  <div class="container">
+    <div class="smart-grid">
+      <div class="smart-copy">
+        <p class="eyebrow" data-i18n="smart.eyebrow">FÖRESLÅ VIKARIER</p>
+        <h2 data-i18n="smart.title">En knapp. Ett rimligt förslag.</h2>
+        <p data-i18n="smart.lead">När du behöver täcka en lektion, klicka på <em>Föreslå vikarier</em>. FrånvaroKollen tittar på vilka som är lediga och föreslår personal som passar — så att du slipper bläddra fram och tillbaka i schemat.</p>
+
+        <div class="smart-criteria">
+          <div class="smart-criterion">
+            <div class="smart-criterion-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
+            </div>
+            <div>
+              <strong data-i18n="smart.c1.title">Tar hänsyn till tillgänglighet</strong>
+              <span data-i18n="smart.c1.body">Personal som är lediga under lektionen visas först.</span>
+            </div>
+          </div>
+          <div class="smart-criterion">
+            <div class="smart-criterion-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+            </div>
+            <div>
+              <strong data-i18n="smart.c2.title">Och rimlig belastning</strong>
+              <span data-i18n="smart.c2.body">Den som redan tagit många vikariat hamnar längre ner.</span>
+            </div>
+          </div>
+          <div class="smart-criterion">
+            <div class="smart-criterion-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            </div>
+            <div>
+              <strong data-i18n="smart.c3.title">Och sammanhang</strong>
+              <span data-i18n="smart.c3.body">Som ämne, klass och erfarenhet — när det är relevant.</span>
+            </div>
+          </div>
+        </div>
+
+        <p style="color:var(--muted);font-size:14px;margin-bottom:24px;font-style:italic" data-i18n="smart.note">Förslagen är just förslag — det är alltid du som bestämmer.</p>
+
+        <a class="btn btn-primary" href="#kontakt" data-i18n="smart.cta">Boka demo →</a>
+      </div>
+
+      <div class="smart-visual">
+        <div class="candidates" aria-hidden="true">
+          <div class="candidates-head">
+            <div>
+              <div class="candidates-title" data-i18n="smart.viz.title">Behöver täckas</div>
+            </div>
+            <div class="candidates-context" data-i18n="smart.viz.context">7B · 09:30–10:15</div>
+          </div>
+
+          <div style="display:flex;justify-content:center;padding:18px 0 22px">
+            <div class="suggest-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+              <span data-i18n="smart.viz.btn">Föreslå vikarier</span>
+            </div>
+          </div>
+
+          <div class="candidate soft">
+            <div class="candidate-info">
+              <strong>S. Sjöberg</strong>
+              <div class="meta" data-i18n="smart.viz.r1_meta">Ledig · senior</div>
+            </div>
+            <div class="candidate-pick" data-i18n="smart.viz.pick">Välj</div>
+          </div>
+
+          <div class="candidate soft">
+            <div class="candidate-info">
+              <strong>E. Nyström</strong>
+              <div class="meta" data-i18n="smart.viz.r2_meta">Ledig · senior</div>
+            </div>
+            <div class="candidate-pick" data-i18n="smart.viz.pick">Välj</div>
+          </div>
+
+          <div class="candidate soft">
+            <div class="candidate-info">
+              <strong>J. Bergström</strong>
+              <div class="meta" data-i18n="smart.viz.r3_meta">Ledig · junior</div>
+            </div>
+            <div class="candidate-pick" data-i18n="smart.viz.pick">Välj</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="features" id="funktioner">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="features.eyebrow">FUNKTIONER</p>
+      <h2 data-i18n="features.title">Allt en koordinator behöver — inget mer</h2>
+      <p data-i18n="features.lead">Byggt av skolpersonal, för skolpersonal. Inga onödiga funktioner, bara det som gör skillnad i en stressig morgonrutin.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature reveal">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        </div>
+        <h3 data-i18n="f1.title">Daglig vikarie</h3>
+        <p data-i18n="f1.body">Realtidsöversikt över personal, tillgänglighet och pågående lektioner. Markera frånvaro med ett klick.</p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <h3 data-i18n="f2.title">Notifieringar &amp; meddelanden</h3>
+        <p data-i18n="f2.body">Personal notifieras automatiskt om sina nya uppdrag via e-post. Tydliga påminnelser, ingen förvirring.</p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+        </div>
+        <h3 data-i18n="f3.title">Vikariecentral</h3>
+        <p data-i18n="f3.body">KPI:er, täckningsgrad och belastningsfördelning. Se direkt om någon tar för många vikariat.</p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+        </div>
+        <h3 data-i18n="f4.title">Externa vikarier &amp; kostnader</h3>
+        <p data-i18n="f4.body">Stöd för externa vikarier med automatisk kostnadsuppföljning. Få full kontroll över budgeten.</p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h3 data-i18n="f5.title">SSO-inloggning</h3>
+        <p data-i18n="f5.body">Logga in med befintliga Google- eller Microsoft-konton. Inga nya lösenord, ingen extra IT-administration.</p>
+      </article>
+
+      <article class="feature reveal">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12325A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6"/></svg>
+        </div>
+        <h3 data-i18n="f6.title">Excel-rapporter</h3>
+        <p data-i18n="f6.body">Professionella rapporter för rektor, ekonomi och SCB. Exporteras till Excel med ett klick.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANALYTICS ============ -->
+<section class="analytics" id="analys">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="ana.eyebrow">ANALYS &amp; INSIKTER</p>
+      <h2 data-i18n="ana.title">Data som faktiskt hjälper er styra skolan</h2>
+      <p data-i18n="ana.lead">Bortom dagens täckning. FrånvaroKollen samlar in mönster över tid så att rektorer, ekonomi och HR kan fatta beslut baserade på fakta — inte magkänsla.</p>
+    </div>
+
+    <div class="analytics-grid">
+      <!-- KAPACITETSÖVERBLICK -->
+      <article class="insight reveal">
+        <div class="insight-head">
+          <span class="insight-label" data-i18n="ana.i1.label">KAPACITETSÖVERBLICK</span>
+          <span class="insight-pill" data-i18n="ana.i1.pill">72% utnyttjande</span>
+        </div>
+        <h3 data-i18n="ana.i1.title">Total undervisningstid mot kapacitet</h3>
+        <p data-i18n="ana.i1.body">Se direkt om personalstyrkan har marginal eller om ni går nära taket. Rektor får tydlig grund för rekryteringsbeslut.</p>
+        <div class="insight-viz">
+          <div class="cost-stack">
+            <div class="cost-row"><span data-i18n="ana.i1.row1">Schemalagd undervisning</span><strong>495h</strong></div>
+            <div class="cost-row"><span data-i18n="ana.i1.row2">Tillgänglig kapacitet</span><strong>686h</strong></div>
+            <div class="cost-row total"><span data-i18n="ana.i1.row3">Marginal</span><strong>+191h</strong></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PERSONALBELASTNING -->
+      <article class="insight reveal">
+        <div class="insight-head">
+          <span class="insight-label" data-i18n="ana.i2.label">PERSONALBELASTNING</span>
+          <span class="insight-pill warn" data-i18n="ana.i2.pill">1 varning</span>
+        </div>
+        <h3 data-i18n="ana.i2.title">Vem tar mest vikariat?</h3>
+        <p data-i18n="ana.i2.body">Rättvis fördelning över terminen. När någon tar oproportionerligt mycket flaggas det automatiskt — innan det blir ett arbetsmiljöproblem.</p>
+        <div class="insight-viz">
+          <div class="workload">
+            <div class="workload-row"><span class="name">K. Andersson</span><span class="track"><span class="fill" style="width:96%;background:#E63946"></span></span><span class="pct">96%</span></div>
+            <div class="workload-row"><span class="name">M. Fredriksson</span><span class="track"><span class="fill" style="width:54%"></span></span><span class="pct">54%</span></div>
+            <div class="workload-row"><span class="name">S. Sjöberg</span><span class="track"><span class="fill" style="width:42%"></span></span><span class="pct">42%</span></div>
+            <div class="workload-row"><span class="name">E. Nyström</span><span class="track"><span class="fill" style="width:31%"></span></span><span class="pct">31%</span></div>
+            <div class="workload-row"><span class="name">P. Svensson</span><span class="track"><span class="fill" style="width:18%"></span></span><span class="pct">18%</span></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- KOSTNADSUPPFÖLJNING -->
+      <article class="insight reveal">
+        <div class="insight-head">
+          <span class="insight-label" data-i18n="ana.i3.label">KOSTNADSUPPFÖLJNING</span>
+          <span class="insight-pill amber" data-i18n="ana.i3.pill">−12% jämfört med Q1</span>
+        </div>
+        <h3 data-i18n="ana.i3.title">Externa vikariekostnader i realtid</h3>
+        <p data-i18n="ana.i3.body">Varje extern vikarie loggas med kostnad. Veckovis och månadsvis sammanställning för ekonomi och budgetuppföljning.</p>
+        <div class="insight-viz">
+          <div class="bars" style="margin-bottom:6px">
+            <div class="bar" style="height:30%"></div>
+            <div class="bar" style="height:55%"></div>
+            <div class="bar ext" style="height:42%"></div>
+            <div class="bar" style="height:68%"></div>
+            <div class="bar ext" style="height:80%"></div>
+            <div class="bar" style="height:48%"></div>
+            <div class="bar" style="height:62%"></div>
+            <div class="bar" style="height:35%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:#5C6A82;font-weight:600;font-family:'JetBrains Mono',monospace">
+            <span>V12</span><span>V13</span><span>V14</span><span>V15</span><span>V16</span><span>V17</span><span>V18</span><span>V19</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- VECKOMÖNSTER -->
+      <article class="insight reveal">
+        <div class="insight-head">
+          <span class="insight-label" data-i18n="ana.i4.label">VECKOMÖNSTER</span>
+          <span class="insight-pill" data-i18n="ana.i4.pill">Värmekarta</span>
+        </div>
+        <h3 data-i18n="ana.i4.title">När är belastningen som högst?</h3>
+        <p data-i18n="ana.i4.body">Identifiera tidpunkter på dagen och dagar i veckan med flest pågående lektioner. Använd för att planera personalbemanning och raster.</p>
+        <div class="insight-viz">
+          <div class="heatmap">
+            <div class="hm-label"></div>
+            <div class="hm-label">Mån</div><div class="hm-label">Tis</div><div class="hm-label">Ons</div><div class="hm-label">Tor</div><div class="hm-label">Fre</div>
+            <div class="hm-label"></div><div class="hm-label"></div>
+
+            <div class="hm-label">08</div>
+            <div class="hm-cell" style="background:#DCEAFF"></div>
+            <div class="hm-cell" style="background:#A8C8FF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell" style="background:#A8C8FF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-label"></div><div class="hm-label"></div>
+
+            <div class="hm-label">09</div>
+            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-cell" style="background:#A8C8FF"></div>
+            <div class="hm-label"></div><div class="hm-label"></div>
+
+            <div class="hm-label">10</div>
+            <div class="hm-cell" style="background:#0E5BC9"></div>
+            <div class="hm-cell" style="background:#0E5BC9"></div>
+            <div class="hm-cell" style="background:#0E5BC9"></div>
+            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-label"></div><div class="hm-label"></div>
+
+            <div class="hm-label">13</div>
+            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell" style="background:#A8C8FF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell" style="background:#DCEAFF"></div>
+            <div class="hm-label"></div><div class="hm-label"></div>
+
+            <div class="hm-label">14</div>
+            <div class="hm-cell" style="background:#A8C8FF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell" style="background:#DCEAFF"></div>
+            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell" style="background:#DCEAFF"></div>
+            <div class="hm-label"></div><div class="hm-label"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="how" id="sa-fungerar-det">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="how.eyebrow">SÅ FUNGERAR DET</p>
+      <h2 data-i18n="how.title">Igång på fem minuter</h2>
+      <p data-i18n="how.lead">Tre steg från inloggning till färdig vikarietilldelning. Ingen installation, ingen utbildning.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01 / LOGGA IN</div>
+        <h3 data-i18n="s1.title">SSO med skolkonto</h3>
+        <p data-i18n="s1.body">Använd era befintliga Google Workspace- eller Microsoft 365-konton. Skoladministratören aktiverar åtkomst.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02 / MARKERA</div>
+        <h3 data-i18n="s2.title">Markera frånvaro</h3>
+        <p data-i18n="s2.body">Klicka på frånvarande personal. Systemet visar direkt vilka lektioner som behöver täckas och föreslår vikarier.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03 / TILLDELA</div>
+        <h3 data-i18n="s3.title">Tilldela &amp; rapportera</h3>
+        <p data-i18n="s3.body">Bekräfta täckning. Personal notifieras. Rapporter för dagen är klara att exporteras till Excel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section class="security" id="sakerhet">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="sec.eyebrow">SÄKERHET &amp; INTEGRITET</p>
+      <h2 data-i18n="sec.title">Byggt för svenska skolors verklighet</h2>
+      <p data-i18n="sec.lead">Personaldata är känslig. FrånvaroKollen är designad från grunden för att uppfylla GDPR och svenska dataskyddskrav.</p>
+    </div>
+
+    <div class="security-grid">
+      <div class="sec-card">
+        <div class="sec-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/></svg>
+        </div>
+        <h3 data-i18n="sec1.title">All data inom EU</h3>
+        <p data-i18n="sec1.body">Hosting och backuper sker uteslutande på EU-baserade servrar. Inga dataöverföringar till tredjeland.</p>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 data-i18n="sec2.title">GDPR-kompatibel</h3>
+        <p data-i18n="sec2.body">Personuppgiftsbiträdesavtal (DPA) ingår. Berättigat intresse som rättslig grund. Tydliga gallringsrutiner.</p>
+      </div>
+      <div class="sec-card">
+        <div class="sec-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h3 data-i18n="sec3.title">SSO &amp; rollstyrning</h3>
+        <p data-i18n="sec3.body">Inloggning via Google &amp; Microsoft. Tydliga behörighetsnivåer per roll. Audit log på alla ändringar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="kontakt">
+  <div class="container">
+    <div class="contact-card reveal">
+      <p class="eyebrow" data-i18n="contact.eyebrow">KOM IGÅNG</p>
+      <h2 data-i18n="contact.title">Vill ni testa FrånvaroKollen på er skola?</h2>
+      <p data-i18n="contact.lead">Vi anpassar lösningen efter er skolas storlek, system och arbetsflöden. Skicka ett meddelande så återkommer vi inom 24 timmar med en offert.</p>
+      <div class="hero-ctas" style="justify-content:center">
+        <a class="btn btn-primary" href="mailto:hej@franvarokollen.com" data-i18n="contact.cta_primary">Kontakta oss för offert →</a>
+        <a class="btn btn-secondary" href="#login" data-i18n="contact.cta_secondary">Logga in</a>
+      </div>
+      <div class="contact-meta">
+        <span><strong data-i18n="contact.email_label">E-post:</strong> hej@franvarokollen.com</span>
+        <span><strong data-i18n="contact.phone_label">Telefon:</strong> +46 (0)8 000 00 00</span>
+        <span><strong data-i18n="contact.location_label">Plats:</strong> Stockholm, Sverige</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <svg class="brand-logo brand-logo-light" viewBox="0 0 784 248" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path style="fill:#0e70f4" d="m 246.56165,187.85079 c -1.65,-0.42834 -7.9725,-0.83204 -14.05,-0.89712 -11.41915,-0.12226 -13.45,-0.78551 -13.45,-4.39255 0,-1.03083 2.41394,-4.42833 5.36432,-7.55 2.95038,-3.12167 5.91762,-6.7376 6.59387,-8.03541 1.14026,-2.1883 0.80318,-2.77428 -4.64182,-8.06939 -10.16508,-9.88524 -28.58112,-21.01578 -41.44129,-25.04686 -11.65675,-3.65386 -14.87508,-2.33126 -14.87508,6.11307 0,6.1745 -0.98838,6.55752 -3.00391,9.16559 -0.96208,1.24492 -3.373,3.81393 -4.46371,4.7902 -1.55276,1.38986 -11.58965,1.90704 -36.44806,1.90704 -27.04712,0 -28.12543,-0.22334 -32.555646,-6.74298 l -2.528678,-3.72129 V 116.83536 88.29963 l 2.528678,-3.721284 c 4.497186,-6.618207 5.162656,-6.742985 35.961506,-6.742985 25.51076,0 27.88153,0.148985 31.46544,1.977361 5.81629,2.967247 8.2515,7.07298 8.99294,15.161983 0.45162,4.927085 1.19431,7.447965 2.61195,8.865615 2.00413,2.00412 13.94309,7.36065 24.93949,11.18933 15.22425,5.30072 37.81004,19.3314 49.22028,30.5765 5.0202,4.94754 5.49144,4.86377 13.63787,-2.42444 3.6692,-3.28265 5.67176,-4.34635 8.18262,-4.34635 2.56066,0 3.49524,0.51694 4.06781,2.25 0.87922,2.66126 0.70095,20.77358 -0.35678,36.25 l -0.7518,11 -11,0.14711 c -6.05,0.0809 -12.35,-0.20335 -14,-0.63168 z"/>
+            <path style="fill:#e4223d" d="m 242.06165,246.50414 c -10.34393,-4.83591 -11.48206,-8.21984 -11.49219,-34.16878 l -0.008,-20 11,0.18362 c 6.05,0.101 15.28171,0.47833 20.5149,0.83852 8.95234,0.61618 9.63228,0.52537 11.5,-1.53574 1.60399,-1.77007 2.08645,-4.10122 2.51299,-12.14223 0.38364,-7.23223 0.93016,-10.20599 2,-10.88257 0.80966,-0.51204 5.81607,-0.93787 11.12536,-0.94629 l 9.65326,0.92272 5.96916,1.68494 4.48395,5.90604 -0.0884,8.56367 c -0.0599,5.80074 -0.0427,50.75817 -1.74588,54.05172 -1.70678,3.30055 -6.51421,6.85561 -9.27068,6.85561 -1.12014,0 -2.31473,0.45 -2.65465,1 -0.91311,1.47744 -50.28511,1.17178 -53.5,-0.33122 z"/>
+            <path style="fill:#ffffff" d="m 103.2317,247.58282 c -0.41339,-0.18131 -1.94268,-1.10106 -3.57188,-1.93548 -1.6292,-0.83441 -4.662891,-3.10372 -6.194729,-5.66192 l -3.011454,-5.02917 -0.663283,-28.3938 0.110547,-28.33853 3.916714,-4.96384 c 5.464665,-6.92564 4.347654,-6.18505 36.578215,-6.18822 27.32374,-0.003 29.8545,0.50065 32.97142,2.40099 1.91004,1.16452 4.28536,3.85962 5.39386,6.30153 1.73514,3.82234 2.14311,7.09018 2.16296,30.8431 0.0243,29.09152 -0.40013,30.87804 -6.29249,36.0516 -4.48692,3.93957 -6.10994,4.76834 -10.58906,4.8195 -2.29293,0.0262 -10.93877,0.37243 -13.14101,0.35182 -3.97912,-0.0372 -13.11913,-0.12515 -17.50381,-0.0597 -2.74852,0.041 -3.22724,-0.1248 -5.14161,-0.11054 -2.48363,0.0185 -13.70464,0.49154 -15.02439,-0.0873 z m -74.277929,-4.1018 C 21.236993,240.30663 16.765542,237.40108 13.003868,233.11677 9.155134,228.73331 4.2659891,218.76258 3.4157742,213.5632 3.0765163,211.48851 2.4080501,209.54945 1.9302938,209.25418 0.5008567,208.37074 0.851043,178.01313 2.3116461,176.19479 c 3.4445584,-4.2882 7.4926389,-7.40212 10.2180329,-7.86004 1.667582,-0.28019 15.181967,-0.39467 30.031967,-0.25441 l 27,0.25502 3.659695,2.79981 c 6.534181,4.9989 6.840305,6.52648 6.840305,34.13344 0,26.31898 1.128551,30.08332 -3.734356,35.37304 -4.643017,5.05054 -10.815014,6.47881 -27.078318,6.47688 -13.375401,-0.002 -15.294696,-1.58049 -20.295201,-3.63751 z M 425.50528,211.97527 c -4.60779,-0.82119 -11.87958,-4.8099 -15.14478,-8.3072 -3.53838,-3.7899 -6.37924,-11.38465 -6.96287,-18.61447 -0.4373,-5.41727 -0.1152,-7.84758 1.66336,-12.5502 2.84664,-7.52669 6.7833,-11.92534 13.70247,-15.31058 4.63075,-2.26562 6.85286,-2.71441 13.23621,-2.67331 12.58331,0.081 21.68782,5.50144 26.13323,15.55857 3.27131,7.40088 3.33179,19.33715 0.13115,25.88456 -6.03408,12.34368 -18.67497,18.5226 -32.75877,16.01263 z m 12.0222,-13.56119 c 4.15766,-1.73718 8.51936,-8.04939 9.23166,-13.35998 0.64889,-4.83789 -2.404,-12.32511 -5.98126,-14.66902 -6.90471,-4.52414 -14.61954,-3.70175 -19.71492,2.10157 -6.77228,7.7132 -4.17116,20.98005 5.01862,25.59716 4.22213,2.12127 6.9697,2.20055 11.4459,0.33027 z m 106.26757,13.39215 c -7.25436,-1.82295 -12.7916,-6.32119 -16.58239,-13.47087 -2.38224,-4.49307 -2.65101,-6.06454 -2.65101,-15.5 0,-9.76519 0.19954,-10.83316 2.85128,-15.26068 5.49948,-9.18227 12.15944,-12.74907 23.76474,-12.7274 5.35285,0.01 7.35309,0.54975 12.38398,3.34171 7.96079,4.41794 11.51492,9.96309 12.24924,19.11124 0.43423,5.40959 0.21037,6.92228 -1.26584,8.55348 -1.64876,1.82186 -3.11391,1.98165 -18.16977,1.98165 -13.94756,0 -16.46561,0.23248 -16.97789,1.56746 -0.87137,2.27076 1.55031,6.199 5.21957,8.46672 4.31548,2.66712 12.25004,2.61593 17.60025,-0.11354 5.00245,-2.55206 8.51975,-1.90483 9.93933,1.82894 1.58973,4.18132 -0.31849,7.00562 -6.71049,9.93197 -6.22138,2.84825 -15.51586,3.83102 -21.651,2.28932 z m 17.87499,-36.39273 c 0.81418,-2.12172 -1.28921,-5.36173 -4.58837,-7.06779 -3.88625,-2.00965 -9.73396,-1.90851 -13.94513,0.2412 -4.46103,2.27727 -5.8851,4.56728 -4.14446,6.66463 1.82459,2.19849 21.84161,2.34145 22.67796,0.16196 z m -220.60839,34.42186 c -1.92003,-1.92003 -2,-3.33333 -2,-35.34501 0,-31.03412 0.12674,-33.45971 1.82874,-35 2.37456,-2.14895 8.51203,-2.15272 10.29882,-0.006 0.95058,1.1419 1.52613,5.80469 1.87244,15.16952 0.28439,7.6905 0.93121,13.65381 1.5,13.82917 0.55,0.16957 8.397,-6.88171 17.43778,-15.66952 15.3638,-14.93422 16.68536,-15.97816 20.22695,-15.97816 2.8936,0 4.15992,0.56584 5.35785,2.39411 0.94746,1.44601 1.32622,3.36012 0.95644,4.83346 -0.33673,1.34164 -5.53226,7.34411 -11.54563,13.33883 -6.01336,5.99472 -10.93339,11.3156 -10.93339,11.82417 0,0.50858 1.74409,3.21625 3.87575,6.01706 10.63303,13.97079 18.17266,25.33351 18.70985,28.19698 0.32861,1.75164 0.0933,4.12687 -0.52293,5.27829 -1.37784,2.57452 -5.46616,3.71172 -8.9531,2.49038 -2.35811,-0.82596 -10.60042,-11.00216 -20.83896,-25.7284 -1.77617,-2.55468 -3.80117,-4.63726 -4.5,-4.62794 -0.69884,0.009 -3.40811,2.02204 -6.02061,4.4727 l -4.75,4.45576 v 8.39244 c 0,6.97621 -0.34975,8.83708 -2.07258,11.0273 -2.53576,3.2237 -7.0499,3.51238 -9.92742,0.63486 z m 133.01426,0.21263 c -2.19611,-1.7783 -2.20808,-1.96781 -2.36078,-37.38673 -0.14538,-33.72074 -0.053,-35.71088 1.75151,-37.71263 2.52083,-2.79645 7.66181,-2.80141 10.19002,-0.01 1.7131,1.89155 1.94042,4.13285 2.25675,22.25 0.19347,11.08061 0.0313,27.05878 -0.36046,35.50703 -0.60908,13.13597 -0.98587,15.63411 -2.60176,17.25 -2.37722,2.37722 -6.01401,2.41909 -8.87528,0.10217 z m 28.05832,-0.84749 c -2.00636,-2.55067 -2.07258,-3.74388 -2.07258,-37.34501 0,-31.78983 0.14724,-34.84284 1.75,-36.28723 3.0662,-2.76322 6.53378,-3.04882 9.00979,-0.74206 2.23893,2.08588 2.24021,2.10737 2.24021,37.54812 0,34.12771 -0.0752,35.53624 -2,37.46104 -2.79084,2.79084 -6.43671,2.53157 -8.92742,-0.63486 z m 87.14993,1.07816 c -2.1954,-1.53772 -2.22232,-1.85797 -2.2072,-26.25 0.008,-13.58132 0.34592,-25.18843 0.75,-25.7936 2.44475,-3.66134 8.79414,-3.99274 12.50055,-0.65245 1.62358,1.46321 2.14727,1.39819 6.5,-0.80697 8.14413,-4.12595 19.377,-2.85986 24.46017,2.75699 3.90789,4.31817 4.77397,9.73741 4.77397,29.87175 0,18.82861 -0.0563,19.35697 -2.22251,20.87428 -2.97791,2.08581 -6.36994,1.96425 -8.64397,-0.30978 -1.62424,-1.62424 -1.93011,-3.99272 -2.35683,-18.25 -0.30725,-10.26554 -0.96898,-17.39244 -1.77208,-19.08533 -2.70557,-5.70319 -12.49134,-7.31146 -17.00764,-2.79516 -3.01263,3.01263 -3.90198,8.49303 -3.89351,23.99266 0.007,13.66544 -0.11616,14.59617 -2.15855,16.25 -2.67864,2.16903 -5.80663,2.2399 -8.7224,0.19761 z M 10.382499,155.32822 C 8.737735,154.63665 6.4225821,152.78034 5.2377155,151.20309 4.0528489,149.62584 2.6285151,147.79185 2.0725293,147.12757 0.8892172,145.71376 0.6403029,87.835361 1.8175347,87.835361 c 0.4157388,0 1.3713559,-1.390437 2.1235938,-3.08986 0.7522378,-1.699423 2.7745879,-3.947741 4.4941115,-4.996262 2.877465,-1.754604 5.346518,-1.9067 31.008372,-1.91014 26.81456,-0.0036 28.015548,0.07882 31.371285,2.152779 1.919125,1.186085 4.78474,4.199186 6.368034,6.695781 l 2.878715,4.539263 v 27.301338 27.30134 l -3.674849,4.06762 c -6.294978,6.96778 -6.063324,6.92414 -36.093841,6.79984 -19.14434,-0.0793 -27.783754,-0.47463 -29.910457,-1.36884 z M 247.05036,132.08536 c -10.41941,-8.93849 -19.32788,-14.79968 -31.48871,-20.71749 -7.15,-3.4794 -16.05251,-7.31428 -19.78336,-8.52197 -3.73085,-1.2077 -8.11835,-3.31912 -9.75,-4.69207 -2.44861,-2.060363 -2.96664,-3.25312 -2.96664,-6.830637 0,-3.251312 0.6755,-5.137166 2.70331,-7.547081 4.75223,-5.647703 6.53018,-5.940908 36.01457,-5.939197 30.99521,0.0018 32.17535,0.264065 36.0209,8.005044 1.99127,4.008345 2.31256,6.627972 2.90602,23.693981 l 0.66724,19.18738 -3.55602,3.55602 c -1.95581,1.95581 -4.19502,3.55602 -4.97602,3.55602 -0.781,0 -3.38708,-1.6875 -5.79129,-3.75 z m 209.29292,-23.29133 c -11.67574,-2.33489 -19.28746,-13.48854 -19.27605,-28.245689 0.007,-8.769117 1.06776,-12.860234 4.90389,-18.909173 2.32001,-3.658277 4.31182,-5.284513 9.51249,-7.766562 3.61792,-1.726675 6.57804,-3.356382 6.57804,-3.621571 0,-0.265189 -1.14801,-2.747645 -2.55113,-5.51657 -2.12618,-4.195819 -2.43481,-5.810035 -1.85285,-9.690824 1.68877,-11.261568 13.74782,-13.973283 18.65243,-4.194369 2.37578,4.736896 2.20231,7.84045 -0.74845,13.390064 -1.375,2.58602 -2.5,5.360323 -2.5,6.165118 0,0.804795 1.61057,2.231292 3.57905,3.169993 3.3778,1.61076 3.74784,1.60985 6.58104,-0.01618 3.95678,-2.270879 7.1178,-2.178314 9.33657,0.273406 1.62414,1.794646 1.81658,4.294895 1.90499,24.75 0.0541,12.514528 -0.25172,24.007107 -0.67958,25.539057 -1.14929,4.11501 -5.04286,5.27059 -9.65633,2.86591 -3.50787,-1.8284 -3.79473,-1.83479 -7.11054,-0.15843 -4.41479,2.23197 -11.28956,3.04251 -16.67357,1.96582 z M 472.1209,94.132052 c 4.12957,-3.474802 5.94169,-7.905007 5.93701,-14.514572 -0.0128,-18.132962 -22.458,-21.673881 -27.98912,-4.415527 -1.59748,4.984509 -0.77747,10.885419 2.09527,15.077921 3.1738,4.631848 6.62376,6.497862 12.07086,6.528878 3.64367,0.02075 5.3811,-0.56898 7.88598,-2.6767 z m -4.71103,-54.114469 c 0.1702,-1.459349 -0.28317,-5.861638 -1.18962,-6.613951 -1.34475,-1.116041 -3.74027,-1.344647 -5.1072,0.02229 -1.34877,1.348767 -1.70021,5.11343 -0.71517,7.275347 1.51306,3.320815 6.59625,2.881166 7.01202,-0.683684 z m 169.64531,68.935887 c -11.22301,-3.64874 -17.8113,-12.839027 -18.76563,-26.17696 -0.90597,-12.662103 4.15921,-23.121138 13.71277,-28.315368 4.78733,-2.602849 5.96024,-2.828294 12.42289,-2.387796 3.92504,0.267533 8.8141,1.302083 10.86457,2.299001 3.49056,1.697074 3.84605,1.705855 5.57874,0.137796 1.01784,-0.92113 3.48685,-1.674782 5.48669,-1.674782 5.82793,0 6.08756,1.248713 5.8105,27.945846 -0.13383,12.895216 -0.65012,24.205953 -1.14731,25.134973 -1.38803,2.59355 -5.41634,3.14453 -9.33343,1.27659 -3.26926,-1.559 -3.69839,-1.54842 -7.29841,0.17992 -4.20554,2.01905 -13.40301,2.85794 -17.33138,1.58078 z M 651.4413,95.450093 c 4.22646,-1.76593 7.53717,-7.116787 8.27906,-13.380846 1.56919,-13.249405 -10.70405,-22.721311 -20.70676,-15.980488 -5.06021,3.410072 -7.43967,8.223422 -7.34941,14.866911 0.1658,12.20318 9.27784,18.8813 19.77711,14.494423 z m 93.4409,13.049677 c -13.42618,-3.78561 -21.607,-18.238582 -19.01978,-33.602068 1.25433,-7.448514 4.62277,-12.876816 11.01671,-17.753639 5.43585,-4.146061 11.07998,-5.659004 18.81885,-5.044506 7.33837,0.582697 15.17692,4.482034 19.50358,9.702182 4.15641,5.014746 6.20378,12.804599 5.63873,21.454238 -0.513,7.852925 -2.89762,13.544522 -7.67736,18.324263 -6.6582,6.65819 -18.73112,9.61211 -28.28073,6.91953 z m 15.88911,-13.628918 c 4.81794,-2.937651 7.61027,-9.164056 7.06399,-15.751483 -0.4963,-5.984675 -2.61549,-9.52015 -7.8656,-13.122311 -2.6399,-1.811265 -4.34538,-2.23571 -7.56671,-1.883132 -5.0056,0.547868 -9.78509,3.745093 -11.99929,8.026869 -2.26231,4.37484 -2.10459,12.704149 0.31916,16.854177 4.29335,7.351239 13.29965,9.990838 20.04845,5.87588 z m -419.39935,11.551588 -2.81031,-2.42074 0.24881,-30.333171 c 0.13684,-16.683243 0.24934,-31.120668 0.25,-32.083168 6.5e-4,-0.9625 0.90119,-2.65 2.00119,-3.75 1.86563,-1.865625 3.33333,-2 21.84501,-2 17.95554,0 20.00259,0.174118 21.5,1.828741 0.91025,1.005807 1.65499,2.961063 1.65499,4.345012 0,4.712423 -2.30699,5.508905 -17.90502,6.181659 -7.92276,0.341715 -14.65254,0.868812 -14.95505,1.171328 -0.30252,0.302516 -0.73537,3.460752 -0.9619,7.018302 -0.26957,4.233496 0.0163,6.98422 0.8275,7.961615 0.98146,1.182598 3.91169,1.493343 14.08173,1.493343 11.67342,0 12.9366,0.176062 13.87756,1.934259 1.64413,3.072087 1.21025,6.597327 -1.06546,8.656815 -1.75676,1.589848 -4.00763,1.955904 -13.75,2.236147 -9.24519,0.265941 -11.90733,0.667361 -12.89936,1.945068 -0.8285,1.067094 -1.25,5.358836 -1.25,12.727711 0,12.030789 -0.62574,13.825399 -5.18969,14.883969 -2.00302,0.46459 -3.40714,0.006 -5.5,-1.79689 z m 164.93969,0.89089 c -2.23037,-1.57749 -2.25,-1.80838 -2.25,-26.463244 0,-21.277456 0.2271,-25.098966 1.57143,-26.443296 2.19234,-2.192337 6.66613,-1.959006 9.80684,0.511477 l 2.64798,2.082906 5.18322,-2.582906 c 12.36208,-6.160284 25.49053,-0.713664 27.86147,11.55893 0.46308,2.39699 0.86156,11.795536 0.88551,20.885658 0.0507,19.245685 -0.51665,20.972505 -6.89071,20.972505 -6.11598,0 -6.50169,-1.11372 -7.06574,-20.402052 -0.31607,-10.808353 -0.95206,-17.886932 -1.72889,-19.242763 -1.54625,-2.698704 -6.46983,-4.46544 -10.30616,-3.698175 -3.39985,0.67997 -7.8019,4.71357 -8.45751,7.749612 -0.24863,1.151358 -0.57701,8.940556 -0.72975,17.309329 -0.2981,16.334079 -0.66498,17.524889 -5.77769,18.752919 -1.53801,0.36941 -3.36579,-0.0119 -4.75,-0.9909 z m 75.29471,-0.72797 c -1.58408,-1.38857 -5.66998,-9.332887 -10.67207,-20.749999 -11.46532,-26.169245 -11.51132,-26.302841 -10.11277,-29.372314 0.64466,-1.414881 2.35159,-2.868541 3.79317,-3.230355 4.706,-1.18113 7.40931,2.110839 13.62625,16.593465 3.13918,7.312852 6.1528,13.741296 6.69694,14.285432 0.54413,0.544135 1.58208,0.75568 2.30655,0.470098 0.72447,-0.285581 3.94247,-7.056374 7.1511,-15.046206 5.11615,-12.739747 6.19819,-14.677869 8.79506,-15.753528 2.22363,-0.921058 3.57264,-0.947962 5.41612,-0.108015 4.33219,1.973878 3.32734,6.539831 -6.18168,28.089147 -10.23971,23.205185 -10.98333,24.578085 -14.0757,25.987065 -3.28065,1.49476 -3.81405,1.40262 -6.74297,-1.16479 z m 107.23355,1.56612 c -2.93834,-0.77119 -3.7669,-7.05939 -3.77268,-28.63186 -0.007,-24.65768 0.55833,-26.634362 7.62198,-26.668946 1.72015,-0.0084 3.68775,0.659687 4.37244,1.484687 1.6693,2.011383 3.18384,1.893304 8.01509,-0.624881 3.09794,-1.614741 5.19143,-1.999231 8.71998,-1.601513 4.94757,0.557663 7.26493,2.555277 7.26493,6.262536 0,3.230483 -3.0693,5.386921 -8.57308,6.023295 -8.21072,0.949364 -9.33239,1.366912 -11.16427,4.155957 -1.44763,2.204024 -1.85201,5.702372 -2.26265,19.574605 -0.48115,16.25426 -0.58899,16.96294 -2.86078,18.80048 -2.31188,1.86996 -3.89906,2.13423 -7.36096,1.22564 z m -291.99308,-2.56612 c -1.88831,-3.30592 -2.37659,-41.841844 -0.5984,-47.226975 1.77127,-5.364156 5.13169,-6.597046 10.45774,-3.836799 l 3.85548,1.998117 4.40728,-2.342171 c 5.76888,-3.065763 11.05442,-3.07629 13.91841,-0.02772 2.73852,2.915028 2.77175,6.088107 0.0918,8.768041 -1.767,1.767001 -2.81593,1.98162 -6.92374,1.416651 -4.55176,-0.626026 -5.07004,-0.456319 -8.66751,2.838113 l -3.82624,3.503953 -0.26798,14.829396 c -0.14739,8.156167 -0.48557,15.810424 -0.7515,17.009464 -0.75075,3.38493 -3.30294,5.31993 -7.01676,5.31993 -2.47161,0 -3.7425,-0.61119 -4.67858,-2.25 z M 102.65151,64.003486 C 98.32484,63.510069 95.46025,61.214784 93.218136,56.444894 91.507541,52.805758 91.154327,49.573107 90.816433,34.464244 90.36889,14.452475 91.05425,11.438779 97.169348,6.5289156 99.03511,5.030878 101.10516,3.3619946 101.76944,2.8202858 c 1.57819,-1.2869742 57.29221,-1.337846 57.29221,-0.052313 0,0.5129368 0.90335,1.2193259 2.00745,1.5697535 1.1041,0.3504276 3.5791,2.6954631 5.5,5.2111907 l 3.49255,4.574049 V 33.83128 c 0,18.791124 -0.10487,19.86393 -2.2534,23.052132 -4.53525,6.729857 -5.41498,6.909026 -35.32671,7.194778 -14.80594,0.141444 -28.22945,0.107827 -29.83003,-0.0747 z M 7.7116461,60.539817 c -6.6679057,-6.975994 -6.65,-6.926946 -6.65,-18.215887 0,-5.768713 0.4142451,-10.488569 0.9205447,-10.488569 0.5062996,0 1.2122482,-1.328117 1.5687747,-2.951371 C 4.5914869,24.146527 11.363323,14.553946 15.630191,11.773276 20.120503,8.84699 29.023493,5.1467025 33.811646,4.2166451 c 1.7875,-0.3472064 3.25,-1.0250344 3.25,-1.5062844 0,-0.48125 6.528896,-0.875 14.508659,-0.875 h 14.508659 l 4.241341,3.0670796 c 2.332737,1.6868937 5.478841,4.9046097 6.991341,7.1504807 2.746183,4.077734 2.75,4.108312 2.75,22.031792 0,20.319575 -0.704638,23.118807 -6.875053,27.311713 l -3.589216,2.438935 H 40.229511 10.861646 Z M 189.48161,61.949683 c -5.73219,-3.495485 -6.41996,-6.609228 -6.41996,-29.065111 0,-21.989761 0.27334,-23.302876 5.89081,-28.2992113 l 3.09187,-2.75 h 17.50866 c 9.62976,0 17.50866,0.3452889 17.50866,0.7673087 0,0.4220197 2.64503,1.8179109 5.87784,3.1019803 6.61506,2.6274983 15.60338,9.2729343 19.56209,14.4630623 3.97002,5.204972 6.79673,14.172297 7.32291,23.230893 0.39509,6.801908 0.14178,8.703394 -1.61934,12.155474 -1.14824,2.250727 -3.28594,5.034767 -4.75046,6.186756 -2.5646,2.017316 -3.73601,2.094388 -31.7779,2.090788 -26.72199,-0.0034 -29.36831,-0.158119 -32.19518,-1.88194 z"/>
+          </svg>
+        </div>
+        <p data-i18n="footer.tagline">Vikariehantering byggd för svenska skolor. EU-hostad, GDPR-kompatibel, alltid tillgänglig.</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer.product">Produkt</h4>
+        <ul>
+          <li><a href="#funktioner" data-i18n="nav.features">Funktioner</a></li>
+          <li><a href="#sa-fungerar-det" data-i18n="nav.how">Så fungerar det</a></li>
+          <li><a href="#sakerhet" data-i18n="nav.security">Säkerhet</a></li>
+          <li><a href="#login" data-i18n="nav.login">Logga in</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.company">Företag</h4>
+        <ul>
+          <li><a href="#" data-i18n="footer.about">Om oss</a></li>
+          <li><a href="#kontakt" data-i18n="nav.contact">Kontakt</a></li>
+          <li><a href="#" data-i18n="footer.blog">Blogg</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.legal">Juridik</h4>
+        <ul>
+          <li><a href="#" data-i18n="footer.privacy">Integritetspolicy</a></li>
+          <li><a href="#" data-i18n="footer.terms">Villkor</a></li>
+          <li><a href="#" data-i18n="footer.dpa">DPA / PuB-avtal</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 FrånvaroKollen · <span data-i18n="footer.org">Org.nr: 000000-0000</span></span>
+      <span data-i18n="footer.made">Byggd i Sverige</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- i18n ----
+  const translations = {
+    sv: {
+      'nav.smart':'Vikarieförslag','nav.features':'Funktioner','nav.how':'Så fungerar det','nav.analytics':'Analys','nav.security':'Säkerhet','nav.contact':'Kontakt','nav.login':'Logga in',
+      'hero.eyebrow':'VIKARIEHANTERING FÖR SKOLOR',
+      'hero.title':'Vikariehantering som <span class="accent">sparar tid</span> varje dag',
+      'hero.lead':'Markera frånvaro, få smarta vikarieförslag, tilldela täckning och exportera professionella rapporter — allt på ett ställe.',
+      'hero.cta_primary':'Logga in →','hero.cta_secondary':'Boka demo',
+      'hero.trust_1':'All data inom EU','hero.trust_2':'GDPR-kompatibel','hero.trust_3':'SSO via Google & Microsoft',
+
+      'smart.eyebrow':'FÖRESLÅ VIKARIER',
+      'smart.title':'En knapp. Ett rimligt förslag.',
+      'smart.lead':'När du behöver täcka en lektion, klicka på <em>Föreslå vikarier</em>. FrånvaroKollen tittar på vilka som är lediga och föreslår personal som passar — så att du slipper bläddra fram och tillbaka i schemat.',
+      'smart.c1.title':'Tar hänsyn till tillgänglighet','smart.c1.body':'Personal som är lediga under lektionen visas först.',
+      'smart.c2.title':'Och rimlig belastning','smart.c2.body':'Den som redan tagit många vikariat hamnar längre ner.',
+      'smart.c3.title':'Och sammanhang','smart.c3.body':'Som ämne, klass och erfarenhet — när det är relevant.',
+      'smart.note':'Förslagen är just förslag — det är alltid du som bestämmer.',
+      'smart.cta':'Boka demo →',
+      'smart.viz.title':'Behöver täckas','smart.viz.context':'7B · 09:30–10:15',
+      'smart.viz.btn':'Föreslå vikarier','smart.viz.pick':'Välj',
+      'smart.viz.r1_meta':'Ledig · senior',
+      'smart.viz.r2_meta':'Ledig · senior',
+      'smart.viz.r3_meta':'Ledig · junior',
+
+      'features.eyebrow':'FUNKTIONER',
+      'features.title':'Allt en koordinator behöver — inget mer',
+      'features.lead':'Byggt av skolpersonal, för skolpersonal. Inga onödiga funktioner, bara det som gör skillnad i en stressig morgonrutin.',
+      'f1.title':'Daglig vikarie','f1.body':'Realtidsöversikt över personal, tillgänglighet och pågående lektioner. Markera frånvaro med ett klick.',
+      'f2.title':'Notifieringar & meddelanden','f2.body':'Personal notifieras automatiskt om sina nya uppdrag via e-post. Tydliga påminnelser, ingen förvirring.',
+      'f3.title':'Vikariecentral','f3.body':'KPI:er, täckningsgrad och belastningsfördelning. Se direkt om någon tar för många vikariat.',
+      'f4.title':'Externa vikarier & kostnader','f4.body':'Stöd för externa vikarier med automatisk kostnadsuppföljning. Få full kontroll över budgeten.',
+      'f5.title':'SSO-inloggning','f5.body':'Logga in med befintliga Google- eller Microsoft-konton. Inga nya lösenord, ingen extra IT-administration.',
+      'f6.title':'Excel-rapporter','f6.body':'Professionella rapporter för rektor, ekonomi och SCB. Exporteras till Excel med ett klick.',
+
+      'ana.eyebrow':'ANALYS & INSIKTER',
+      'ana.title':'Data som faktiskt hjälper er styra skolan',
+      'ana.lead':'Bortom dagens täckning. FrånvaroKollen samlar in mönster över tid så att rektorer, ekonomi och HR kan fatta beslut baserade på fakta — inte magkänsla.',
+      'ana.i1.label':'KAPACITETSÖVERBLICK','ana.i1.pill':'72% utnyttjande',
+      'ana.i1.title':'Total undervisningstid mot kapacitet',
+      'ana.i1.body':'Se direkt om personalstyrkan har marginal eller om ni går nära taket. Rektor får tydlig grund för rekryteringsbeslut.',
+      'ana.i1.row1':'Schemalagd undervisning','ana.i1.row2':'Tillgänglig kapacitet','ana.i1.row3':'Marginal',
+      'ana.i2.label':'PERSONALBELASTNING','ana.i2.pill':'1 varning',
+      'ana.i2.title':'Vem tar mest vikariat?',
+      'ana.i2.body':'Rättvis fördelning över terminen. När någon tar oproportionerligt mycket flaggas det automatiskt — innan det blir ett arbetsmiljöproblem.',
+      'ana.i3.label':'KOSTNADSUPPFÖLJNING','ana.i3.pill':'−12% jämfört med Q1',
+      'ana.i3.title':'Externa vikariekostnader i realtid',
+      'ana.i3.body':'Varje extern vikarie loggas med kostnad. Veckovis och månadsvis sammanställning för ekonomi och budgetuppföljning.',
+      'ana.i4.label':'VECKOMÖNSTER','ana.i4.pill':'Värmekarta',
+      'ana.i4.title':'När är belastningen som högst?',
+      'ana.i4.body':'Identifiera tidpunkter på dagen och dagar i veckan med flest pågående lektioner. Använd för att planera personalbemanning och raster.',
+
+      'how.eyebrow':'SÅ FUNGERAR DET','how.title':'Igång på fem minuter',
+      'how.lead':'Tre steg från inloggning till färdig vikarietilldelning. Ingen installation, ingen utbildning.',
+      's1.title':'SSO med skolkonto','s1.body':'Använd era befintliga Google Workspace- eller Microsoft 365-konton. Skoladministratören aktiverar åtkomst.',
+      's2.title':'Markera frånvaro','s2.body':'Klicka på frånvarande personal. Systemet visar direkt vilka lektioner som behöver täckas och föreslår vikarier.',
+      's3.title':'Tilldela & rapportera','s3.body':'Bekräfta täckning. Personal notifieras. Rapporter för dagen är klara att exporteras till Excel.',
+      'sec.eyebrow':'SÄKERHET & INTEGRITET','sec.title':'Byggt för svenska skolors verklighet',
+      'sec.lead':'Personaldata är känslig. FrånvaroKollen är designad från grunden för att uppfylla GDPR och svenska dataskyddskrav.',
+      'sec1.title':'All data inom EU','sec1.body':'Hosting och backuper sker uteslutande på EU-baserade servrar. Inga dataöverföringar till tredjeland.',
+      'sec2.title':'GDPR-kompatibel','sec2.body':'Personuppgiftsbiträdesavtal (DPA) ingår. Berättigat intresse som rättslig grund. Tydliga gallringsrutiner.',
+      'sec3.title':'SSO & rollstyrning','sec3.body':'Inloggning via Google & Microsoft. Tydliga behörighetsnivåer per roll. Audit log på alla ändringar.',
+      'contact.eyebrow':'KOM IGÅNG','contact.title':'Vill ni testa FrånvaroKollen på er skola?',
+      'contact.lead':'Vi anpassar lösningen efter er skolas storlek, system och arbetsflöden. Skicka ett meddelande så återkommer vi inom 24 timmar med en offert.',
+      'contact.cta_primary':'Kontakta oss för offert →','contact.cta_secondary':'Logga in',
+      'contact.email_label':'E-post:','contact.phone_label':'Telefon:','contact.location_label':'Plats:',
+      'footer.tagline':'Vikariehantering byggd för svenska skolor. EU-hostad, GDPR-kompatibel, alltid tillgänglig.',
+      'footer.product':'Produkt','footer.company':'Företag','footer.legal':'Juridik',
+      'footer.about':'Om oss','footer.blog':'Blogg',
+      'footer.privacy':'Integritetspolicy','footer.terms':'Villkor','footer.dpa':'DPA / PuB-avtal',
+      'footer.org':'Org.nr: 000000-0000','footer.made':'Byggd i Sverige'
+    },
+    en: {
+      'nav.smart':'Suggestions','nav.features':'Features','nav.how':'How it works','nav.analytics':'Analytics','nav.security':'Security','nav.contact':'Contact','nav.login':'Log in',
+      'hero.eyebrow':'SUBSTITUTE MANAGEMENT FOR SCHOOLS',
+      'hero.title':'Substitute management that <span class="accent">saves time</span> every day',
+      'hero.lead':'Mark absences, get smart substitute suggestions, assign coverage and export professional reports — all in one place.',
+      'hero.cta_primary':'Log in →','hero.cta_secondary':'Book a demo',
+      'hero.trust_1':'All data within EU','hero.trust_2':'GDPR-compliant','hero.trust_3':'SSO via Google & Microsoft',
+
+      'smart.eyebrow':'SUGGEST SUBSTITUTES',
+      'smart.title':'One button. A sensible suggestion.',
+      'smart.lead':'When you need to cover a lesson, click <em>Suggest substitutes</em>. FrånvaroKollen looks at who\'s free and suggests staff who fit — so you don\'t have to flip back and forth through the schedule.',
+      'smart.c1.title':'Considers availability','smart.c1.body':'Staff who are free during the lesson appear first.',
+      'smart.c2.title':'And fair workload','smart.c2.body':'Anyone who\'s already taken many covers ranks lower.',
+      'smart.c3.title':'And context','smart.c3.body':'Like subject, class and experience — where relevant.',
+      'smart.note':'Suggestions are just suggestions — you always decide.',
+      'smart.cta':'Book a demo →',
+      'smart.viz.title':'Needs cover','smart.viz.context':'7B · 09:30–10:15',
+      'smart.viz.btn':'Suggest substitutes','smart.viz.pick':'Pick',
+      'smart.viz.r1_meta':'Free · senior',
+      'smart.viz.r2_meta':'Free · senior',
+      'smart.viz.r3_meta':'Free · junior',
+
+      'features.eyebrow':'FEATURES',
+      'features.title':'Everything a coordinator needs — nothing more',
+      'features.lead':'Built by school staff, for school staff. No unnecessary features, only what makes a difference on a busy Monday morning.',
+      'f1.title':'Daily substitute view','f1.body':'Real-time overview of staff, availability and ongoing lessons. Mark absences with a single click.',
+      'f2.title':'Notifications & messaging','f2.body':'Staff are automatically notified of their new assignments by email. Clear reminders, no confusion.',
+      'f3.title':'Sub coverage hub','f3.body':'KPIs, coverage rates and workload distribution. See instantly if someone is taking too many shifts.',
+      'f4.title':'External subs & costs','f4.body':'Support for external substitutes with automatic cost tracking. Full budget control.',
+      'f5.title':'Single sign-on','f5.body':'Log in with existing Google or Microsoft accounts. No new passwords, no extra IT admin.',
+      'f6.title':'Excel reports','f6.body':'Professional reports for principals, finance and SCB. Export to Excel with one click.',
+
+      'ana.eyebrow':'ANALYTICS & INSIGHTS',
+      'ana.title':'Data that actually helps you run the school',
+      'ana.lead':'Beyond today\'s coverage. FrånvaroKollen captures patterns over time so that principals, finance and HR can make decisions based on facts — not gut feeling.',
+      'ana.i1.label':'CAPACITY OVERVIEW','ana.i1.pill':'72% utilisation',
+      'ana.i1.title':'Total teaching time vs capacity',
+      'ana.i1.body':'See instantly whether your staff has headroom or is running near the ceiling. Gives principals a clear basis for hiring decisions.',
+      'ana.i1.row1':'Scheduled teaching','ana.i1.row2':'Available capacity','ana.i1.row3':'Headroom',
+      'ana.i2.label':'STAFF WORKLOAD','ana.i2.pill':'1 alert',
+      'ana.i2.title':'Who covers most lessons?',
+      'ana.i2.body':'Fair distribution across the term. When someone takes disproportionately more, it\'s flagged automatically — before it becomes a workplace issue.',
+      'ana.i3.label':'COST TRACKING','ana.i3.pill':'−12% vs Q1',
+      'ana.i3.title':'External substitute costs in real time',
+      'ana.i3.body':'Every external substitute is logged with cost. Weekly and monthly summaries for finance and budget tracking.',
+      'ana.i4.label':'WEEKLY PATTERNS','ana.i4.pill':'Heatmap',
+      'ana.i4.title':'When is the load highest?',
+      'ana.i4.body':'Identify times of day and days of week with the most ongoing lessons. Use to plan staffing and breaks.',
+
+      'how.eyebrow':'HOW IT WORKS','how.title':'Up and running in five minutes',
+      'how.lead':'Three steps from login to assigned coverage. No install, no training.',
+      's1.title':'SSO with school account','s1.body':'Use your existing Google Workspace or Microsoft 365 accounts. Your school admin enables access.',
+      's2.title':'Mark absences','s2.body':'Click absent staff. The system instantly shows which lessons need coverage and suggests substitutes.',
+      's3.title':'Assign & report','s3.body':'Confirm coverage. Staff are notified. Daily reports are ready to export to Excel.',
+      'sec.eyebrow':'SECURITY & PRIVACY','sec.title':'Built for the realities of Swedish schools',
+      'sec.lead':'Staff data is sensitive. FrånvaroKollen is designed from the ground up to meet GDPR and Swedish data protection standards.',
+      'sec1.title':'All data within EU','sec1.body':'Hosting and backups are exclusively on EU-based servers. No transfers to third countries.',
+      'sec2.title':'GDPR-compliant','sec2.body':'Data Processing Agreement (DPA) included. Legitimate interest as legal basis. Clear retention policies.',
+      'sec3.title':'SSO & role-based access','sec3.body':'Sign in via Google & Microsoft. Clear permission levels per role. Audit log on every change.',
+      'contact.eyebrow':'GET STARTED','contact.title':'Want to try FrånvaroKollen at your school?',
+      'contact.lead':'We tailor the solution to your school\'s size, systems and workflows. Send us a message and we\'ll respond within 24 hours with a quote.',
+      'contact.cta_primary':'Contact us for a quote →','contact.cta_secondary':'Log in',
+      'contact.email_label':'Email:','contact.phone_label':'Phone:','contact.location_label':'Location:',
+      'footer.tagline':'Substitute management built for Swedish schools. EU-hosted, GDPR-compliant, always available.',
+      'footer.product':'Product','footer.company':'Company','footer.legal':'Legal',
+      'footer.about':'About','footer.blog':'Blog',
+      'footer.privacy':'Privacy Policy','footer.terms':'Terms','footer.dpa':'DPA',
+      'footer.org':'Org.no: 000000-0000','footer.made':'Made in Sweden'
+    }
+  };
+
+  function setLang(lang){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(translations[lang] && translations[lang][key]){
+        el.innerHTML = translations[lang][key];
+      }
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach(b=>{
+      const isActive = b.getAttribute('data-lang-btn') === lang;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive);
+    });
+    try{ localStorage.setItem('fk_lang', lang); }catch(e){}
+  }
+
+  document.querySelectorAll('[data-lang-btn]').forEach(btn=>{
+    btn.addEventListener('click', ()=>setLang(btn.getAttribute('data-lang-btn')));
+  });
+
+  // restore preference (defaults to sv)
+  try{
+    const saved = localStorage.getItem('fk_lang');
+    if(saved === 'en') setLang('en');
+  }catch(e){}
+
+  // ---- mobile menu ----
+  const navToggle = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if(navToggle){
+    navToggle.addEventListener('click', ()=>mobileMenu.classList.toggle('open'));
+    mobileMenu.addEventListener('click', e=>{
+      if(e.target.tagName === 'A') mobileMenu.classList.remove('open');
+    });
+  }
+
+  // ---- reveal on scroll ----
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold:0.12 });
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+  }
+</script>
+
+</body>
+</html>
