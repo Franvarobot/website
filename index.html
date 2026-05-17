@@ -677,7 +677,7 @@
     .reveal.in{opacity:1;transform:none}
   }
 
-  /* ===== SCROLLING WAITLIST BANNER ===== */
+  /* ===== WAITLIST BANNER ===== */
   .waitlist-banner{background:var(--red);border-bottom:2px solid var(--ink);position:relative;z-index:49;overflow:hidden}
   .waitlist-banner-track{display:flex;align-items:center;white-space:nowrap;animation:marquee 32s linear infinite}
   .waitlist-banner-track:hover{animation-play-state:paused}
@@ -685,12 +685,12 @@
   .banner-star{color:rgba(255,255,255,0.5);font-size:11px}
   .banner-cta{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--red);border:2px solid var(--ink);border-radius:8px;padding:4px 13px;font-size:13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s;white-space:nowrap;flex-shrink:0}
   .banner-cta:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
-  .banner-dismiss{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.7);font-size:20px;padding:4px 8px;cursor:pointer;transition:color .15s;line-height:1;z-index:2;background:var(--red);border-left:1px solid rgba(255,255,255,0.2)}
-  .banner-dismiss:hover{color:#fff}
-  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .banner-dismiss{position:absolute;right:0;top:0;bottom:0;color:rgba(255,255,255,0.8);font-size:18px;padding:0 14px;cursor:pointer;transition:color .15s;background:rgba(0,0,0,0.15);display:flex;align-items:center;border:none}
+  .banner-dismiss:hover{color:#fff;background:rgba(0,0,0,0.25)}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
   /* ===== MODAL ===== */
-  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(14,27,48,0.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px}
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(14,27,48,0.65);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px}
   .modal-backdrop.open{display:flex}
   .modal{background:var(--cream);border:2px solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative}
   .modal-header{background:var(--cream-deep);border-bottom:2px solid var(--ink);padding:22px 28px 18px;border-radius:calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0 0}
@@ -710,7 +710,6 @@
   .form-field textarea{resize:vertical;min-height:90px}
   .form-submit{width:100%;padding:14px;background:var(--navy);color:#fff;border:2px solid var(--ink);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm);font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;cursor:pointer;transition:transform .12s,box-shadow .12s;margin-top:4px}
   .form-submit:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
-  .form-submit:active{transform:none;box-shadow:2px 2px 0 var(--ink)}
   .form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:var(--shadow-sm)}
   .form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
   .modal-success{display:none;flex-direction:column;align-items:center;padding:48px 28px;text-align:center;background:#fff;border-radius:0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px)}
@@ -748,7 +747,7 @@
         <button class="active" data-lang-btn="sv" aria-pressed="true">SV</button>
         <button data-lang-btn="en" aria-pressed="false">EN</button>
       </div>
-      <a class="nav-login" href="#login" data-i18n="nav.login">Logga in</a>
+      <a class="nav-login" href="https://franvaro-v2.vercel.app/login" data-i18n="nav.login">Logga in</a>
       <button class="nav-toggle" aria-label="Öppna meny" id="navToggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -759,21 +758,18 @@
     <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
     <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
     <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
-    <a href="#login" data-i18n="nav.login">Logga in</a>
+    <a href="https://franvaro-v2.vercel.app/login" data-i18n="nav.login">Logga in</a>
   </div>
 </header>
-
 <!-- ============ WAITLIST BANNER ============ -->
 <div class="waitlist-banner" id="waitlistBanner">
   <div class="waitlist-banner-track">
     <div class="waitlist-banner-inner">
       <span data-i18n="banner.msg">🎉 Anmäl er skola till väntelistan! ★ Begränsat antal pilotplatser – säkra er plats nu ★ Frånvarokollen lanserar 2026</span>
-      <span class="banner-star">★</span>
       <button class="banner-cta" data-i18n="banner.cta">Gå med i väntelistan →</button>
     </div>
     <div class="waitlist-banner-inner" aria-hidden="true">
       <span data-i18n="banner.msg">🎉 Anmäl er skola till väntelistan! ★ Begränsat antal pilotplatser – säkra er plats nu ★ Frånvarokollen lanserar 2026</span>
-      <span class="banner-star">★</span>
       <button class="banner-cta" data-i18n="banner.cta">Gå med i väntelistan →</button>
     </div>
   </div>
@@ -788,7 +784,7 @@
       <h1 data-i18n="hero.title">Hantera frånvaro, vikarier och bemanning <span class="accent">på ett ställe</span></h1>
       <p class="hero-lead" data-i18n="hero.lead">Slipp hoppa mellan scheman, listor och rapporter. Frånvarokollen samlar dagens bemanning, vikarieförslag och uppföljning i ett tydligt verktyg.</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="#login" data-i18n="hero.cta_primary">Logga in →</a>
+        <a class="btn btn-primary" href="https://franvaro-v2.vercel.app/login" data-i18n="hero.cta_primary">Logga in →</a>
         <a class="btn btn-ghost" href="#kontakt" data-i18n="hero.cta_secondary">Gå med i väntelistan</a>
       </div>
       <div class="hero-trust">
@@ -1284,7 +1280,7 @@
       <p data-i18n="contact.lead">Vi visar hur Frånvarokollen kan användas utifrån er skolas storlek, system och arbetssätt. Hör av er så bokar vi en kort genomgång.</p>
       <div class="hero-ctas" style="justify-content:center">
         <a class="btn btn-primary" href="mailto:hej@franvarokollen.com" data-i18n="contact.cta_primary">Gå med i väntelistan →</a>
-        <a class="btn btn-secondary" href="#login" data-i18n="contact.cta_secondary">Logga in</a>
+        <a class="btn btn-secondary" href="https://franvaro-v2.vercel.app/login" data-i18n="contact.cta_secondary">Logga in</a>
       </div>
       <div class="contact-meta">
         <span><strong data-i18n="contact.email_label">E-post:</strong> hej@franvarokollen.com</span>
@@ -1315,7 +1311,7 @@
           <li><a href="#funktioner" data-i18n="nav.features">Funktioner</a></li>
           <li><a href="#sa-fungerar-det" data-i18n="nav.how">Så fungerar det</a></li>
           <li><a href="#sakerhet" data-i18n="nav.security">Säkerhet</a></li>
-          <li><a href="#login" data-i18n="nav.login">Logga in</a></li>
+          <li><a href="https://franvaro-v2.vercel.app/login" data-i18n="nav.login">Logga in</a></li>
         </ul>
       </div>
       <div>
@@ -1416,7 +1412,6 @@
       'footer.about':'Om oss','footer.blog':'Blogg',
       'footer.privacy':'Integritetspolicy','footer.terms':'Villkor','footer.dpa':'DPA / PuB-avtal',
       'footer.org':'Org.nr: 000000-0000','footer.made':'Byggd i Sverige'
-      'banner.msg':'🎉 Anmäl er skola till väntelistan! ★ Begränsat antal pilotplatser – säkra er plats nu ★ Frånvarokollen lanserar 2026','banner.cta':'Gå med i väntelistan →',
     },
     en: {
       'nav.smart':'Suggestions','nav.features':'Features','nav.how':'How it works','nav.analytics':'Analytics','nav.security':'Security','nav.contact':'Contact','nav.login':'Log in',
@@ -1489,7 +1484,6 @@
       'footer.about':'About','footer.blog':'Blog',
       'footer.privacy':'Privacy Policy','footer.terms':'Terms','footer.dpa':'DPA',
       'footer.org':'Org.no: 000000-0000','footer.made':'Made in Sweden'
-      'banner.msg':'🎉 Join the waitlist now! ★ Limited pilot spots – secure your school\'s place ★ Frånvarokollen launches 2026','banner.cta':'Join the waitlist →',
     }
   };
 
@@ -1688,55 +1682,6 @@
     });
     document.querySelectorAll('.heatmap .hm-cell').forEach(c=>c.classList.add('in'));
   }
-
-  // ---- banner ----
-  const _banner = document.getElementById('waitlistBanner');
-  document.getElementById('dismissBanner').addEventListener('click', ()=>{
-    _banner.style.display='none';
-    try{ sessionStorage.setItem('fk_banner_dismissed','1'); }catch(e){}
-  });
-  try{ if(sessionStorage.getItem('fk_banner_dismissed')) _banner.style.display='none'; }catch(e){}
-
-  document.querySelectorAll('.banner-cta').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const m=document.getElementById('waitlistModal');
-      m.classList.add('open');document.body.style.overflow='hidden';
-      setTimeout(()=>document.getElementById('f_namn').focus(),50);
-    });
-  });
-
-  // ---- modal ----
-  const _modal=document.getElementById('waitlistModal');
-  const _formBody=document.getElementById('modalFormBody');
-  const _successView=document.getElementById('modalSuccess');
-  const _formError=document.getElementById('formError');
-
-  function closeModal(){_modal.classList.remove('open');document.body.style.overflow='';}
-  document.getElementById('closeModal').addEventListener('click', closeModal);
-  document.getElementById('closeSuccess').addEventListener('click', closeModal);
-  _modal.addEventListener('click', e=>{if(e.target===_modal) closeModal();});
-  document.addEventListener('keydown', e=>{if(e.key==='Escape') closeModal();});
-
-  document.getElementById('formSubmit').addEventListener('click', async function(){
-    _formError.style.display='none';
-    const namn=document.getElementById('f_namn').value.trim();
-    const skola=document.getElementById('f_skola').value.trim();
-    const epost=document.getElementById('f_epost').value.trim();
-    if(!namn||!skola||!epost){_formError.textContent='Fyll i namn, skola och e-postadress.';_formError.style.display='block';return;}
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(epost)){_formError.textContent='Ange en giltig e-postadress.';_formError.style.display='block';return;}
-    this.disabled=true;this.textContent='Skickar…';
-    const FORM='1FAIpQLSc4H2Lfo2gGYckgB37qVxcP1mqAqLNM7yfTvXqBX9KrASjnDw';
-    const body=new URLSearchParams({'entry.1366650426':namn,'entry.208385686':skola,'entry.3578072':epost,'entry.1155743629':document.getElementById('f_telefon').value.trim(),'entry.541496665':document.getElementById('f_kommentarer').value.trim()});
-    try{
-      await fetch(`https://docs.google.com/forms/d/e/${FORM}/formResponse`,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()});
-      _formBody.style.display='none';_successView.classList.add('show');
-    }catch(err){
-      _formError.textContent='Något gick fel. Mejla oss på info@franvarokollen.com.';
-      _formError.style.display='block';
-      this.disabled=false;this.textContent='Anmäl oss till väntelistan →';
-    }
-  });
-
 </script>
 
 
@@ -1786,6 +1731,5 @@
     </div>
   </div>
 </div>
-
 </body>
 </html>
