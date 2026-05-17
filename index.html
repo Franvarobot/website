@@ -112,14 +112,17 @@
   .lang button.active{background:var(--navy);color:#fff}
   .nav-login{
     padding:10px 18px;
-    background:var(--navy);
+    background:var(--red);
     color:#fff;
+    border:2px solid var(--ink);
     border-radius:8px;
-    font-weight:700;
+    font-weight:800;
     font-size:14px;
-    transition:background .15s;
+    box-shadow:var(--shadow-sm);
+    transition:transform .12s,box-shadow .12s;
+    cursor:pointer;
   }
-  .nav-login:hover{background:var(--navy-deep)}
+  .nav-login:hover{transform:translate(-1px,-1px);box-shadow:var(--shadow)}
   .nav-toggle{display:none;width:40px;height:40px;border-radius:8px;background:var(--cream-deep);align-items:center;justify-content:center}
   .nav-toggle svg{width:20px;height:20px}
 
@@ -875,7 +878,7 @@
         <button class="active" data-lang-btn="sv" aria-pressed="true">SV</button>
         <button data-lang-btn="en" aria-pressed="false">EN</button>
       </div>
-      <a class="nav-login" href="https://franvaro-v2.vercel.app/login" data-i18n="nav.login">Logga in</a>
+      <button class="nav-login banner-cta" data-i18n="nav.login">Gå med nu</button>
       <button class="nav-toggle" aria-label="Öppna meny" id="navToggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -886,7 +889,7 @@
     <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
     <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
     <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
-    <a href="https://franvaro-v2.vercel.app/login" data-i18n="nav.login">Logga in</a>
+    <button class="banner-cta" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;font:inherit;text-decoration:underline" data-i18n="nav.login">Gå med nu</button>
   </div>
 </header>
 <!-- ============ WAITLIST BANNER ============ -->
@@ -920,7 +923,7 @@
       <h1 data-i18n="hero.title">Hantera frånvaro, vikarier och bemanning <span class="accent">på ett ställe</span></h1>
       <p class="hero-lead" data-i18n="hero.lead">Slipp hoppa mellan scheman, listor och rapporter. Frånvarokollen samlar dagens bemanning, vikarieförslag och uppföljning i ett tydligt verktyg.</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="https://franvaro-v2.vercel.app/login" data-i18n="hero.cta_primary">Logga in →</a>
+        <button class="btn btn-primary banner-cta" data-i18n="hero.cta_primary">Logga in →</button>
         <a class="btn btn-red" href="#" data-waitlist data-i18n="hero.cta_secondary">Gå med i väntelistan</a>
       </div>
       <div class="hero-trust">
@@ -1330,7 +1333,7 @@
       <p data-i18n="contact.lead">Vi visar hur Frånvarokollen kan användas utifrån er skolas storlek, system och arbetssätt. Hör av er så bokar vi en kort genomgång.</p>
       <div class="hero-ctas" style="justify-content:center">
         <a class="btn btn-red" href="#" data-waitlist data-i18n="contact.cta_primary">Gå med i väntelistan →</a>
-        <a class="btn btn-secondary" href="https://franvaro-v2.vercel.app/login" data-i18n="contact.cta_secondary">Logga in</a>
+        <button class="btn btn-secondary banner-cta" data-i18n="contact.cta_secondary">Logga in</button>
       </div>
       <div class="contact-meta">
         <span><strong data-i18n="contact.email_label">E-post:</strong> info@franvarokollen.com</span>
@@ -1360,7 +1363,7 @@
           <li><a href="#funktioner" data-i18n="nav.features">Funktioner</a></li>
           <li><a href="#sa-fungerar-det" data-i18n="nav.how">Så fungerar det</a></li>
           <li><a href="#sakerhet" data-i18n="nav.security">Säkerhet</a></li>
-          <li><a href="https://franvaro-v2.vercel.app/login" data-i18n="nav.login">Logga in</a></li>
+          <li><button class="banner-cta" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;font:inherit;text-decoration:underline" data-i18n="nav.login">Gå med nu</button></li>
         </ul>
       </div>
       <div>
@@ -1391,7 +1394,7 @@
   // ---- i18n ----
   const translations = {
     sv: {
-      'nav.smart':'Vikarieförslag','nav.features':'Funktioner','nav.how':'Så fungerar det','nav.analytics':'Analys','nav.security':'Säkerhet','nav.contact':'Kontakt','nav.login':'Logga in',
+      'nav.smart':'Vikarieförslag','nav.features':'Funktioner','nav.how':'Så fungerar det','nav.analytics':'Analys','nav.security':'Säkerhet','nav.contact':'Kontakt','nav.login':'Gå med nu',
       'hero.eyebrow':'FRÅNVARO & BEMANNING FÖR SKOLOR',
       'hero.title':'Hantera frånvaro, vikarier och bemanning <span class="accent">på ett ställe</span>',
       'hero.lead':'Slipp hoppa mellan scheman, listor och rapporter. Frånvarokollen samlar dagens bemanning, vikarieförslag och uppföljning i ett tydligt verktyg.',
@@ -1463,7 +1466,7 @@
       'footer.org':'Org.nr: 559585-6450','footer.made':'Byggd i Sverige'
     },
     en: {
-      'nav.smart':'Suggestions','nav.features':'Features','nav.how':'How it works','nav.analytics':'Analytics','nav.security':'Security','nav.contact':'Contact','nav.login':'Log in',
+      'nav.smart':'Suggestions','nav.features':'Features','nav.how':'How it works','nav.analytics':'Analytics','nav.security':'Security','nav.contact':'Contact','nav.login':'Join now',
       'hero.eyebrow':'ABSENCE & STAFFING FOR SCHOOLS',
       'hero.title':'Manage absence, substitutes and staffing <span class="accent">in one place</span>',
       'hero.lead':'No more jumping between schedules, lists and reports. Frånvarokollen brings today\'s staffing, substitute suggestions and follow-up together in one clear tool.',
