@@ -972,8 +972,8 @@
     <div class="smart-grid">
       <div class="smart-copy">
         <p class="eyebrow" data-i18n="smart.eyebrow">FÖRESLÅ VIKARIER</p>
-        <h2 data-i18n="smart.title">Ett klick till rätt vikarie</h2>
-        <p data-i18n="smart.lead">När någon är frånvarande visar Frånvarokollen vilka som kan ta lektionen. Systemet föreslår personer utifrån schema, belastning och sammanhang, så att du slipper leta runt i schemat.</p>
+        <h2 data-i18n="smart.title">Ett klick ifrån rätt vikarie</h2>
+        <p data-i18n="smart.lead">När lärare är frånvarande visar Frånvarokollen vilka som kan täcka lektionen. Systemet föreslår personer utifrån schema, belastning och sammanhang, så att du slipper leta runt i schemat.</p>
 
         <div class="smart-criteria">
           <div class="smart-criterion">
@@ -991,7 +991,7 @@
             </div>
             <div>
               <strong data-i18n="smart.c2.title">Tar hänsyn till arbetsbelastning</strong>
-              <span data-i18n="smart.c2.body">Den som redan tagit många pass föreslås längre ner.</span>
+              <span data-i18n="smart.c2.body">Den som redan täckt många lektioner föreslås längre ner.</span>
             </div>
           </div>
           <div class="smart-criterion">
@@ -1334,7 +1334,6 @@
       </div>
       <div class="contact-meta">
         <span><strong data-i18n="contact.email_label">E-post:</strong> info@franvarokollen.com</span>
-        <span><strong data-i18n="contact.phone_label">Telefon:</strong> +46 (0)8 000 00 00</span>
         <span><strong data-i18n="contact.location_label">Plats:</strong> Stockholm, Sverige</span>
       </div>
     </div>
@@ -1400,10 +1399,10 @@
       'hero.trust_1':'All data lagras inom EU','hero.trust_2':'Anpassat för GDPR','hero.trust_3':'Inloggning via Google & Microsoft',
 
       'smart.eyebrow':'FÖRESLÅ VIKARIER',
-      'smart.title':'Ett klick till rätt vikarie',
-      'smart.lead':'När någon är frånvarande visar Frånvarokollen vilka som kan ta lektionen. Systemet föreslår personer utifrån schema, belastning och sammanhang, så att du slipper leta runt i schemat.',
+      'smart.title':'Ett klick ifrån rätt vikarie',
+      'smart.lead':'När lärare är frånvarande visar Frånvarokollen vilka som kan täcka lektionen. Systemet föreslår personer utifrån schema, belastning och sammanhang, så att du slipper leta runt i schemat.',
       'smart.c1.title':'Visar vem som är ledig','smart.c1.body':'De som är lediga under lektionen visas först.',
-      'smart.c2.title':'Tar hänsyn till arbetsbelastning','smart.c2.body':'Den som redan tagit många pass föreslås längre ner.',
+      'smart.c2.title':'Tar hänsyn till arbetsbelastning','smart.c2.body':'Den som redan täckt många lektioner föreslås längre ner.',
       'smart.c3.title':'Matchar ämne och klass','smart.c3.body':'Till exempel ämne, klass och tidigare erfarenhet när det är relevant.',
       'smart.note':'Systemet föreslår. Du bestämmer.',
       'smart.cta':'Gå med i väntelistan →',
@@ -1790,7 +1789,6 @@
       var FORM='1FAIpQLSc4H2Lfo2gGYckgB37qVxcP1mqAqLNM7yfTvXqBX9KrASjnDw';
       var body=new URLSearchParams({
         'entry.1366650426':namn,'entry.208385686':skola,'entry.3578072':epost,
-        'entry.1155743629':document.getElementById('f_telefon').value.trim(),
         'entry.541496665':document.getElementById('f_kommentarer').value.trim()
       });
       try{
@@ -1888,10 +1886,7 @@
           <label for="f_epost">E-postadress <span class="req">*</span></label>
           <input type="email" id="f_epost" autocomplete="email" placeholder="namn@skola.se" required>
         </div>
-        <div class="form-field">
-          <label for="f_telefon">Telefonnummer</label>
-          <input type="tel" id="f_telefon" autocomplete="tel" placeholder="+46 70 000 00 00">
-        </div>
+
       </div>
       <div class="form-field">
         <label for="f_kommentarer">Kommentarer</label>
