@@ -679,7 +679,7 @@
   }
 
   /* ===== WAITLIST BANNER ===== */
-  .waitlist-banner{background:var(--red);border-bottom:2px solid var(--ink);position:relative;z-index:49;overflow:hidden;cursor:pointer}
+  .waitlist-banner{background:var(--red);border-bottom:2px solid var(--ink);position:sticky;top:72px;z-index:49;overflow:hidden;cursor:pointer}
   .waitlist-banner-track{display:flex;width:max-content;animation:fk-marquee 45s linear infinite}
   .waitlist-banner-track:hover{animation-play-state:paused}
   .waitlist-banner-inner{display:inline-flex;align-items:center;gap:16px;padding:11px 0;font-size:14px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0}
@@ -1692,7 +1692,7 @@
   }
 
   // ===== WAITLIST BANNER + MODAL =====
-  (function(){
+  document.addEventListener("DOMContentLoaded", function(){
     var banner      = document.getElementById('waitlistBanner');
     var modal       = document.getElementById('waitlistModal');
     var formBody    = document.getElementById('modalFormBody');
