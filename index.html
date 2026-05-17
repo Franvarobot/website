@@ -1808,11 +1808,11 @@
         this.textContent='Anmäl oss till väntelistan →';
       }
     });
-  })();
+  });
 
 
   // ---- Frånvarokollen hero animation ----
-  (function(){
+  document.addEventListener("DOMContentLoaded", function(){
     var S=[{id:'fks1',dur:4200},{id:'fks2',dur:4200},{id:'fks3',dur:4200},{id:'fks4',dur:5600},{id:'fks5',dur:5800}];
     var cur=0,tmr=null;
     function show(i){
@@ -1857,7 +1857,7 @@
       });
     }
     show(0);tmr=setTimeout(next,S[0].dur);
-  })();
+  });
 
 </script>
 
