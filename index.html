@@ -676,6 +676,50 @@
     .reveal{opacity:0;transform:translateY(12px);transition:opacity .5s ease, transform .5s ease}
     .reveal.in{opacity:1;transform:none}
   }
+
+  /* ===== SCROLLING WAITLIST BANNER ===== */
+  .waitlist-banner{background:var(--red);border-bottom:2px solid var(--ink);position:relative;z-index:49;overflow:hidden}
+  .waitlist-banner-track{display:flex;align-items:center;white-space:nowrap;animation:marquee 32s linear infinite}
+  .waitlist-banner-track:hover{animation-play-state:paused}
+  .waitlist-banner-inner{display:inline-flex;align-items:center;gap:18px;padding:10px 48px 10px 0;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+  .banner-star{color:rgba(255,255,255,0.5);font-size:11px}
+  .banner-cta{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--red);border:2px solid var(--ink);border-radius:8px;padding:4px 13px;font-size:13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s;white-space:nowrap;flex-shrink:0}
+  .banner-cta:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+  .banner-dismiss{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.7);font-size:20px;padding:4px 8px;cursor:pointer;transition:color .15s;line-height:1;z-index:2;background:var(--red);border-left:1px solid rgba(255,255,255,0.2)}
+  .banner-dismiss:hover{color:#fff}
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* ===== MODAL ===== */
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(14,27,48,0.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px}
+  .modal-backdrop.open{display:flex}
+  .modal{background:var(--cream);border:2px solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative}
+  .modal-header{background:var(--cream-deep);border-bottom:2px solid var(--ink);padding:22px 28px 18px;border-radius:calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0 0}
+  .modal-header .eyebrow{color:var(--blue)}
+  .modal-header h3{color:var(--navy);font-size:22px}
+  .modal-header p{color:var(--muted);font-size:14px;margin-top:6px}
+  .modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;background:rgba(0,0,0,0.06);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:1px solid var(--line);transition:background .15s}
+  .modal-close:hover{background:rgba(0,0,0,0.12)}
+  .modal-body{padding:28px;background:#fff;border-radius:0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px)}
+  .form-error{display:none;background:#FFE5E7;border:1.5px solid var(--red);border-radius:8px;padding:12px 14px;font-size:14px;color:#8B0010;font-weight:600;margin-bottom:18px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .form-field{margin-bottom:18px}
+  .form-field label{display:block;font-weight:700;font-size:14px;color:var(--navy);margin-bottom:6px}
+  .form-field label .req{color:var(--red)}
+  .form-field input,.form-field textarea{width:100%;padding:11px 14px;border:2px solid var(--line);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:15px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+  .form-field input:focus,.form-field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,123,255,0.12)}
+  .form-field textarea{resize:vertical;min-height:90px}
+  .form-submit{width:100%;padding:14px;background:var(--navy);color:#fff;border:2px solid var(--ink);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm);font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;cursor:pointer;transition:transform .12s,box-shadow .12s;margin-top:4px}
+  .form-submit:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .form-submit:active{transform:none;box-shadow:2px 2px 0 var(--ink)}
+  .form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:var(--shadow-sm)}
+  .form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .modal-success{display:none;flex-direction:column;align-items:center;padding:48px 28px;text-align:center;background:#fff;border-radius:0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px)}
+  .modal-success.show{display:flex}
+  .success-icon{width:64px;height:64px;background:#E5F7EC;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+  .modal-success h3{margin-bottom:10px}
+  .modal-success p{color:var(--muted);font-size:15px;max-width:340px}
+  .modal-success .btn{margin-top:24px}
+  @media(max-width:640px){.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -718,6 +762,25 @@
     <a href="#login" data-i18n="nav.login">Logga in</a>
   </div>
 </header>
+
+<!-- ============ WAITLIST BANNER ============ -->
+<div class="waitlist-banner" id="waitlistBanner">
+  <div class="waitlist-banner-track">
+    <!-- set A -->
+    <div class="waitlist-banner-inner">
+      <span data-i18n="banner.msg">🎉 Anmäl er skola till väntelistan! ★ Begränsat antal pilotplatser – säkra er plats nu ★ Frånvarokollen lanserar 2026</span>
+      <span class="banner-star">★</span>
+      <button class="banner-cta" id="openWaitlist" data-i18n="banner.cta">Anmäl er →</button>
+    </div>
+    <!-- set B (duplicate for seamless loop) -->
+    <div class="waitlist-banner-inner" aria-hidden="true">
+      <span data-i18n="banner.msg">🎉 Anmäl er skola till väntelistan! ★ Begränsat antal pilotplatser – säkra er plats nu ★ Frånvarokollen lanserar 2026</span>
+      <span class="banner-star">★</span>
+      <button class="banner-cta" data-i18n="banner.cta">Anmäl er →</button>
+    </div>
+  </div>
+  <button class="banner-dismiss" id="dismissBanner" aria-label="Stäng">×</button>
+</div>
 
 <!-- ============ HERO ============ -->
 <section class="hero">
@@ -1355,6 +1418,7 @@
       'footer.about':'Om oss','footer.blog':'Blogg',
       'footer.privacy':'Integritetspolicy','footer.terms':'Villkor','footer.dpa':'DPA / PuB-avtal',
       'footer.org':'Org.nr: 000000-0000','footer.made':'Byggd i Sverige'
+      'banner.msg':'🎉 Anmäl er skola till väntelistan! ★ Begränsat antal pilotplatser – säkra er plats nu ★ Frånvarokollen lanserar 2026','banner.cta':'Anmäl er →',
     },
     en: {
       'nav.smart':'Suggestions','nav.features':'Features','nav.how':'How it works','nav.analytics':'Analytics','nav.security':'Security','nav.contact':'Contact','nav.login':'Log in',
@@ -1427,6 +1491,7 @@
       'footer.about':'About','footer.blog':'Blog',
       'footer.privacy':'Privacy Policy','footer.terms':'Terms','footer.dpa':'DPA',
       'footer.org':'Org.no: 000000-0000','footer.made':'Made in Sweden'
+      'banner.msg':'🎉 Join the waitlist now! ★ Limited pilot spots – secure your school\'s place ★ Frånvarokollen launches 2026','banner.cta':'Sign up →',
     }
   };
 
@@ -1625,7 +1690,105 @@
     });
     document.querySelectorAll('.heatmap .hm-cell').forEach(c=>c.classList.add('in'));
   }
+
+  // ---- banner ----
+  const _banner = document.getElementById('waitlistBanner');
+  document.getElementById('dismissBanner').addEventListener('click', ()=>{
+    _banner.style.display='none';
+    try{ sessionStorage.setItem('fk_banner_dismissed','1'); }catch(e){}
+  });
+  try{ if(sessionStorage.getItem('fk_banner_dismissed')) _banner.style.display='none'; }catch(e){}
+
+  // wire duplicate CTA buttons
+  document.querySelectorAll('.banner-cta').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const m=document.getElementById('waitlistModal');
+      m.classList.add('open');document.body.style.overflow='hidden';
+      setTimeout(()=>document.getElementById('f_namn').focus(),50);
+    });
+  });
+
+  // ---- modal ----
+  const _modal=document.getElementById('waitlistModal');
+  const _formBody=document.getElementById('modalFormBody');
+  const _successView=document.getElementById('modalSuccess');
+  const _formError=document.getElementById('formError');
+
+  function closeModal(){_modal.classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('closeSuccess').addEventListener('click', closeModal);
+  _modal.addEventListener('click', e=>{if(e.target===_modal) closeModal();});
+  document.addEventListener('keydown', e=>{if(e.key==='Escape') closeModal();});
+
+  document.getElementById('formSubmit').addEventListener('click', async function(){
+    _formError.style.display='none';
+    const namn=document.getElementById('f_namn').value.trim();
+    const skola=document.getElementById('f_skola').value.trim();
+    const epost=document.getElementById('f_epost').value.trim();
+    if(!namn||!skola||!epost){_formError.textContent='Fyll i namn, skola och e-postadress.';_formError.style.display='block';return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(epost)){_formError.textContent='Ange en giltig e-postadress.';_formError.style.display='block';return;}
+    this.disabled=true;this.textContent='Skickar…';
+    const FORM='1FAIpQLSc4H2Lfo2gGYckgB37qVxcP1mqAqLNM7yfTvXqBX9KrASjnDw';
+    const body=new URLSearchParams({'entry.1366650426':namn,'entry.208385686':skola,'entry.3578072':epost,'entry.1155743629':document.getElementById('f_telefon').value.trim(),'entry.541496665':document.getElementById('f_kommentarer').value.trim()});
+    try{
+      await fetch(`https://docs.google.com/forms/d/e/${FORM}/formResponse`,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()});
+      _formBody.style.display='none';_successView.classList.add('show');
+    }catch(err){
+      _formError.textContent='Något gick fel. Mejla oss på info@franvarokollen.com.';
+      _formError.style.display='block';
+      this.disabled=false;this.textContent='Anmäl oss till väntelistan →';
+    }
+  });
+
 </script>
+
+
+<!-- ============ WAITLIST MODAL ============ -->
+<div class="modal-backdrop" id="waitlistModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <p class="eyebrow">VÄNTELISTAN</p>
+      <h3 id="modalTitle">Anmäl er skola till pilotprogrammet</h3>
+      <p>Begränsat antal platser. Fyll i formuläret så hör vi av oss.</p>
+      <button class="modal-close" id="closeModal" aria-label="Stäng">×</button>
+    </div>
+    <div class="modal-body" id="modalFormBody">
+      <div class="form-error" id="formError"></div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="f_namn">Namn <span class="req">*</span></label>
+          <input type="text" id="f_namn" autocomplete="name" placeholder="För- och efternamn" required>
+        </div>
+        <div class="form-field">
+          <label for="f_skola">Skola <span class="req">*</span></label>
+          <input type="text" id="f_skola" placeholder="Skolans namn" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="f_epost">E-postadress <span class="req">*</span></label>
+          <input type="email" id="f_epost" autocomplete="email" placeholder="namn@skola.se" required>
+        </div>
+        <div class="form-field">
+          <label for="f_telefon">Telefonnummer</label>
+          <input type="tel" id="f_telefon" autocomplete="tel" placeholder="+46 70 000 00 00">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="f_kommentarer">Kommentarer</label>
+        <textarea id="f_kommentarer" placeholder="Berätta gärna om er skola, antal elever, nuvarande system…"></textarea>
+      </div>
+      <button class="form-submit" id="formSubmit">Anmäl oss till väntelistan →</button>
+      <p class="form-note">Dina uppgifter används enbart för att kontakta er angående pilotprogrammet.</p>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">🎉</div>
+      <h3>Tack för er anmälan!</h3>
+      <p>Vi hör av oss inom kort för att boka en genomgång anpassad för er skola.</p>
+      <button class="btn btn-primary" id="closeSuccess">Stäng</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
