@@ -723,133 +723,6 @@
   .modal-success .btn{margin-top:24px}
   @media(max-width:640px){.form-row{grid-template-columns:1fr}}
 
-  /* ===== FK HERO ANIMATION ===== */
-          .fk-stage{position:absolute;inset:0;background:#F6F4EF;overflow:hidden;font-family:'Nunito',sans-serif}
-          .fk-scene{position:absolute;inset:0;opacity:0;pointer-events:none}
-          .fk-scene.fk-active{opacity:1;pointer-events:auto}
-          .fk-logo{position:absolute;bottom:5%;left:5%;display:flex;align-items:center;gap:6px;z-index:10}
-          .fk-logo-grid{display:grid;grid-template-columns:repeat(3,7px);gap:2px}
-          .fk-logo-grid span{width:7px;height:7px;border-radius:2px;background:#12325A}
-          .fk-logo-grid span.b{background:#1E7BFF}.fk-logo-grid span.r{background:#E63946}
-          .fk-logo-txt{font-size:10px;font-weight:800;color:#12325A;line-height:1.2}
-          #fks1 .fk-left{position:absolute;left:6%;top:14%}
-          #fks1 .fk-pill{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #12325A;border-radius:999px;padding:3px 10px;font-size:10px;font-weight:700;color:#12325A;margin-bottom:3%;font-family:'JetBrains Mono',monospace}
-          #fks1 .fk-dot{width:6px;height:6px;border-radius:50%;background:#E63946;animation:fk-blink 1.2s infinite}
-          @keyframes fk-blink{0%,100%{opacity:1}50%{opacity:.3}}
-          #fks1 h1{font-size:clamp(22px,4.5vw,42px);font-weight:900;color:#12325A;line-height:1.05;margin-bottom:2%}
-          #fks1 .fk-sub{font-size:clamp(10px,1.6vw,14px);color:#8898aa;font-weight:600}
-          .fk-card{position:absolute;right:5%;top:10%;width:34%;background:#fff;border:2px solid #12325A;border-radius:14px;box-shadow:5px 5px 0 rgba(0,0,0,.15);padding:4%;transform:translateX(120%);animation:fk-slide-in .7s .3s cubic-bezier(.22,1,.36,1) forwards}
-          @keyframes fk-slide-in{to{transform:translateX(0)}}
-          .fk-card-hd{display:flex;align-items:center;gap:8px;margin-bottom:4%}
-          .fk-avatar{width:32px;height:32px;border-radius:50%;background:#12325A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0}
-          .fk-cname{font-weight:800;font-size:12px;color:#12325A}.fk-csub{font-size:9px;color:#8898aa;font-weight:600}
-          .fk-clabel{font-size:9px;font-weight:800;color:#E63946;margin-bottom:3%;letter-spacing:.03em}
-          .fk-cmsg{background:#fef2f2;border-radius:7px;padding:6% 8%;font-size:11px;color:#12325A;line-height:1.5;margin-bottom:4%}
-          .fk-cfoot{display:flex;justify-content:space-between;font-size:9px;color:#8898aa;font-weight:600}
-          .fk-phones{position:absolute;left:3%;top:10%;width:40%;height:85%}
-          .fk-phone{position:absolute;width:13%;padding-bottom:17%;background:#fff;border:2.5px solid #12325A;border-radius:12%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5%}
-          .fk-phone::before{content:'';width:35%;padding-bottom:35%;border-radius:50%;background:#E63946}
-          .fk-ph-lines{display:flex;flex-direction:column;gap:3px;width:55%}
-          .fk-ph-lines span{display:block;height:3px;border-radius:2px;background:#e2e8f0}
-          .fk-ph-lines span:nth-child(2){width:70%}
-          .fp1{left:5%;top:6%;transform:rotate(-15deg);animation:ft1 3s ease-in-out infinite}
-          .fp2{left:28%;top:2%;transform:rotate(8deg);animation:ft2 3.2s ease-in-out infinite}
-          .fp3{left:52%;top:10%;transform:rotate(-5deg);animation:ft3 2.8s ease-in-out infinite}
-          .fp4{left:13%;top:38%;transform:rotate(12deg);animation:ft4 3.5s ease-in-out infinite}
-          .fp5{left:38%;top:40%;transform:rotate(-20deg);animation:ft5 3.1s ease-in-out infinite}
-          .fp6{left:6%;top:67%;transform:rotate(6deg);animation:ft6 2.9s ease-in-out infinite}
-          @keyframes ft1{0%,100%{transform:rotate(-15deg) translateY(0)}50%{transform:rotate(-8deg) translateY(-8px)}}
-          @keyframes ft2{0%,100%{transform:rotate(8deg) translateY(0)}50%{transform:rotate(14deg) translateY(-6px)}}
-          @keyframes ft3{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(-12deg) translateY(-9px)}}
-          @keyframes ft4{0%,100%{transform:rotate(12deg) translateY(0)}50%{transform:rotate(5deg) translateY(-7px)}}
-          @keyframes ft5{0%,100%{transform:rotate(-20deg) translateY(0)}50%{transform:rotate(-13deg) translateY(-6px)}}
-          @keyframes ft6{0%,100%{transform:rotate(6deg) translateY(0)}50%{transform:rotate(12deg) translateY(-7px)}}
-          #fks2 .fk-right{position:absolute;right:5%;top:18%;width:44%}
-          #fks2 h2{font-size:clamp(20px,3.8vw,36px);font-weight:900;color:#12325A;margin-bottom:2%}
-          #fks2 .fk-sub{font-size:clamp(9px,1.4vw,13px);color:#8898aa;font-weight:600;margin-bottom:6%}
-          .fk-bullets{list-style:none}
-          .fk-bullets li{font-size:clamp(11px,1.8vw,16px);font-weight:700;color:#12325A;margin-bottom:6%;display:flex;align-items:center;gap:8px;opacity:0;animation:fk-up .5s forwards}
-          .fk-bullets li:nth-child(1){animation-delay:.2s}.fk-bullets li:nth-child(2){animation-delay:.5s}.fk-bullets li:nth-child(3){animation-delay:.8s}
-          @keyframes fk-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-          .fk-diamond{width:9px;height:9px;background:#E63946;transform:rotate(45deg);flex-shrink:0}
-          #fks3 .fk-top{position:absolute;left:5%;top:8%}
-          #fks3 h2{font-size:clamp(18px,3.5vw,32px);font-weight:900;color:#12325A;margin-bottom:1%}
-          #fks3 .fk-sub{font-size:clamp(9px,1.4vw,13px);color:#8898aa;font-weight:600}
-          .fk-shell{position:absolute;left:4%;right:4%;top:28%;bottom:8%;background:#fff;border:2px solid #12325A;border-radius:12px;box-shadow:5px 5px 0 rgba(0,0,0,.13);display:flex;overflow:hidden;opacity:0;animation:fk-fade .5s .2s forwards}
-          @keyframes fk-fade{to{opacity:1}}
-          .fk-sb{width:28%;background:#12325A;padding:8% 0;flex-shrink:0}
-          .fk-sb-logo{display:flex;align-items:center;gap:5px;padding:0 10%;margin-bottom:8%}
-          .fk-sb-icon{display:grid;grid-template-columns:repeat(3,5px);gap:1.5px}
-          .fk-sb-icon span{width:5px;height:5px;border-radius:1.5px;background:rgba(255,255,255,.4)}
-          .fk-sb-icon span.b{background:#1E7BFF}.fk-sb-icon span.r{background:#E63946}
-          .fk-sb-txt{font-size:8px;font-weight:800;color:#fff;line-height:1.2}
-          .fk-nav{padding:6% 10%;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)}
-          .fk-nav.on{background:#1E7BFF;color:#fff;border-radius:0 7px 7px 0;margin-right:8%}
-          .fk-mp{flex:1;padding:6% 7%}
-          .fk-pt{display:flex;justify-content:space-between;align-items:center;margin-bottom:5%}
-          .fk-pt h3{font-size:12px;font-weight:800;color:#12325A}
-          .fk-pt-time{font-size:9px;color:#8898aa;font-family:'JetBrains Mono',monospace}
-          .fk-srow{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:5% 6%;display:flex;align-items:center;gap:8%;opacity:0;animation:fk-fade .4s .6s forwards}
-          .fk-sav{width:28px;height:28px;border-radius:50%;background:#12325A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px;flex-shrink:0}
-          .fk-sn{font-size:11px;font-weight:800;color:#12325A}.fk-ss{font-size:9px;color:#8898aa;font-weight:600}
-          .fk-badge{background:#E63946;color:#fff;font-size:8px;font-weight:800;padding:2px 7px;border-radius:5px}
-          .fk-cta{display:inline-flex;align-items:center;background:#1E7BFF;color:#fff;border:none;border-radius:8px;padding:6% 10%;font-size:11px;font-weight:800;margin-top:5%;opacity:0;animation:fk-fade .4s .9s forwards;font-family:'Nunito',sans-serif}
-          #fks4 .fk-top{position:absolute;left:0;right:0;top:6%;text-align:center}
-          #fks4 h2{font-size:clamp(18px,3.5vw,32px);font-weight:900;color:#12325A;margin-bottom:1%}
-          #fks4 .fk-sub{font-size:clamp(9px,1.4vw,13px);color:#8898aa;font-weight:600}
-          .fk-grid{position:absolute;left:50%;transform:translateX(-50%);top:22%;display:grid;grid-template-columns:repeat(9,9.5%);grid-template-rows:repeat(5,18%);gap:1.2%;width:86%;height:52%}
-          .fk-tile{border-radius:15%;background:#12325A;transition:background .15s}
-          .fk-tile.lit{background:#4f9fff}
-          .fk-tile.match{background:#E63946;box-shadow:0 0 0 3px rgba(230,57,70,.3);animation:fk-pulse 1s infinite}
-          @keyframes fk-pulse{0%,100%{box-shadow:0 0 0 3px rgba(230,57,70,.3)}50%{box-shadow:0 0 0 6px rgba(230,57,70,.1)}}
-          .fk-sbar{position:absolute;bottom:6%;left:50%;transform:translateX(-50%);display:flex;gap:2%;opacity:0;animation:fk-fade .5s 2.4s forwards;width:86%}
-          .fk-sp{border:2px solid #12325A;border-radius:8px;padding:2% 4%;text-align:center;background:#fff;flex:1}
-          .fk-sp.on{background:#12325A;color:#fff}
-          .fk-snum{font-size:clamp(14px,2.5vw,22px);font-weight:900;color:#12325A}
-          .fk-sp.on .fk-snum{color:#fff}
-          .fk-slbl{font-size:clamp(7px,1vw,9px);font-weight:600;color:#8898aa;font-family:'JetBrains Mono',monospace}
-          .fk-sp.on .fk-slbl{color:rgba(255,255,255,.7)}
-          #fks5 .fk-top{position:absolute;left:0;right:0;top:3%;text-align:center}
-          #fks5 h2{font-size:clamp(16px,3.2vw,30px);font-weight:900;color:#12325A;margin-bottom:1%}
-          #fks5 .fk-sub{font-size:clamp(8px,1.3vw,12px);color:#8898aa;font-weight:600}
-          .fk-dash{position:absolute;left:3%;right:3%;top:20%;bottom:5%;background:#fff;border:2px solid #12325A;border-radius:12px;box-shadow:5px 5px 0 rgba(0,0,0,.12);display:flex;overflow:hidden;opacity:0;animation:fk-fade .4s .1s forwards}
-          .fk-dsb{width:24%;background:#12325A;padding:6% 0;flex-shrink:0}
-          .fk-dm{flex:1;padding:4% 5%;overflow:hidden}
-          .fk-dtr{display:flex;justify-content:space-between;align-items:center;margin-bottom:3%}
-          .fk-dtr h3{font-size:10px;font-weight:800;color:#12325A}
-          .fk-dterm{font-size:8px;color:#8898aa;font-family:'JetBrains Mono',monospace}
-          .fk-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:3%;margin-bottom:3%}
-          .fk-kc{border:1.5px solid #e2e8f0;border-radius:7px;padding:4% 5%;opacity:0;animation:fk-fade .4s forwards}
-          .fk-kc:nth-child(1){animation-delay:.3s}.fk-kc:nth-child(2){animation-delay:.5s}.fk-kc:nth-child(3){animation-delay:.7s}.fk-kc:nth-child(4){animation-delay:.9s}
-          .fk-klbl{font-size:7px;font-weight:700;color:#8898aa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1px}
-          .fk-kval{font-size:clamp(12px,2vw,18px);font-weight:900;color:#12325A;line-height:1}
-          .fk-kval sup{font-size:8px}
-          .fk-ksub{font-size:7px;color:#8898aa;font-weight:600;margin-top:1px}
-          .fk-kbadge{display:inline-block;font-size:7px;font-weight:700;padding:1px 4px;border-radius:3px;margin-top:2px}
-          .fk-kbadge.dn{background:#fee2e2;color:#E63946}.fk-kbadge.ok{background:#dcfce7;color:#16a34a}.fk-kbadge.wn{background:#fef3c7;color:#d97706}
-          .fk-charts{display:grid;grid-template-columns:1fr 1fr;gap:3%}
-          .fk-cb{border:1.5px solid #e2e8f0;border-radius:7px;padding:4% 5%;opacity:0;animation:fk-fade .4s 1.1s forwards}
-          .fk-ct{font-size:8px;font-weight:800;color:#12325A;margin-bottom:5%}
-          .fk-barchart{display:flex;align-items:flex-end;gap:5%;height:55px}
-          .fk-bg{display:flex;flex-direction:column;align-items:center;flex:1}
-          .fk-bst{display:flex;flex-direction:column;justify-content:flex-end;width:100%}
-          .fk-bs.int{background:#12325A;border-radius:3px 3px 0 0}.fk-bs.ext{background:#E63946}
-          .fk-bl{font-size:7px;color:#8898aa;font-weight:600;margin-top:3px}
-          .fk-bl.rl{color:#E63946;font-weight:800}
-          .fk-leg{display:flex;gap:8%;margin-top:4%}
-          .fk-li{display:flex;align-items:center;gap:3px;font-size:7px;color:#8898aa;font-weight:600}
-          .fk-ld{width:7px;height:7px;border-radius:2px}
-          .fk-donut-wrap{display:flex;align-items:center;gap:8%}
-          .fk-dleg{display:flex;flex-direction:column;gap:3px}
-          .fk-di{display:flex;align-items:center;gap:5px;font-size:8px;font-weight:600;color:#12325A}
-          .fk-dc{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-          .fk-dp{margin-left:auto;color:#8898aa;min-width:20px;text-align:right;font-size:7px}
-          .fk-tip{position:absolute;background:#fff;border:1.5px solid #12325A;border-radius:6px;padding:3px 8px;font-size:8px;font-weight:800;color:#12325A;box-shadow:2px 2px 0 rgba(0,0,0,.1);opacity:0;animation:fk-pop .3s forwards;white-space:nowrap;font-family:'Nunito',sans-serif}
-          .fk-tip.sav{left:28%;top:30%;animation-delay:1.6s}
-          .fk-tip.erik{left:72%;top:72%;animation-delay:2s;transform:translateX(-100%)}
-          @keyframes fk-pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-          .fk-tip.erik{animation-name:fk-pop-l}
-          @keyframes fk-pop-l{from{opacity:0;transform:translateX(-100%) scale(.85)}to{opacity:1;transform:translateX(-100%) scale(1)}}
 </style>
 </head>
 <body>
@@ -935,34 +808,14 @@
 
     <div class="hero-visual" aria-hidden="true">
       <div style="position:relative;width:100%;max-width:560px;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:2px solid #0E1B30;box-shadow:8px 8px 0 rgba(0,0,0,0.18);display:block;">
-        <!-- fk styles moved to <head> -->
-        <div class="fk-stage">
-          <div class="fk-logo"><div class="fk-logo-grid"><span></span><span></span><span></span><span></span><span class="b"></span><span></span><span></span><span></span><span class="r"></span></div><div class="fk-logo-txt">Frånvaro<br>Kollen</div></div>
-          <div class="fk-scene" id="fks1">
-            <div class="fk-left"><div class="fk-pill"><span class="fk-dot"></span>TISDAG 06:45</div><h1>En lärare<br>sjukanmäler<br>sig.</h1><div class="fk-sub">A teacher just called in sick.</div></div>
-            <div class="fk-card"><div class="fk-card-hd"><div class="fk-avatar">MJ</div><div><div class="fk-cname">Maria Johansson</div><div class="fk-csub">Årskurs 5B · Matematik</div></div></div><div class="fk-clabel">Sjukanmälan inkommen</div><div class="fk-cmsg">"Hej, jag är sjuk idag. Kan tyvärr inte ta mina lektioner."</div><div class="fk-cfoot"><span>06:45</span><span>4 lektioner att täcka</span></div></div>
-          </div>
-          <div class="fk-scene" id="fks2">
-            <div class="fk-phones"><div class="fk-phone fp1"><div class="fk-ph-lines"><span></span><span></span></div></div><div class="fk-phone fp2"><div class="fk-ph-lines"><span></span><span></span></div></div><div class="fk-phone fp3"><div class="fk-ph-lines"><span></span><span></span></div></div><div class="fk-phone fp4"><div class="fk-ph-lines"><span></span><span></span></div></div><div class="fk-phone fp5"><div class="fk-ph-lines"><span></span><span></span></div></div><div class="fk-phone fp6"><div class="fk-ph-lines"><span></span><span></span></div></div></div>
-            <div class="fk-right"><h2>Det gamla sättet</h2><div class="fk-sub">The old way — panic, phone calls, spreadsheets.</div><ul class="fk-bullets"><li><span class="fk-diamond"></span>17 samtal ringda</li><li><span class="fk-diamond"></span>3 kaffe druckna</li><li><span class="fk-diamond"></span>0 vikarier hittade</li></ul></div>
-          </div>
-          <div class="fk-scene" id="fks3">
-            <div class="fk-top"><h2>Öppna Frånvarokollen.</h2><div class="fk-sub">Open Frånvarokollen.</div></div>
-            <div class="fk-shell"><div class="fk-sb"><div class="fk-sb-logo"><div class="fk-sb-icon"><span></span><span></span><span></span><span></span><span class="b"></span><span></span><span></span><span></span><span class="r"></span></div><div class="fk-sb-txt">Frånvaro<br>Kollen</div></div><div class="fk-nav">Översikt</div><div class="fk-nav on">Frånvaro</div><div class="fk-nav">Vikarier</div><div class="fk-nav">Schema</div><div class="fk-nav">Rapporter</div></div><div class="fk-mp"><div class="fk-pt"><h3>Frånvaro idag</h3><div class="fk-pt-time">06:48</div></div><div class="fk-srow"><div class="fk-sav">MJ</div><div style="flex:1"><div class="fk-sn">Maria Johansson</div><div class="fk-ss">5B · Matematik · 4 lektioner</div></div><div class="fk-badge">SJUK</div></div><button class="fk-cta">Hitta vikarie →</button></div></div>
-          </div>
-          <div class="fk-scene" id="fks4">
-            <div class="fk-top"><h2>Hitta bästa matchningen.</h2><div class="fk-sub">Find the best-matched substitute.</div></div>
-            <div class="fk-grid" id="fkTileGrid"></div>
-            <div class="fk-sbar"><div class="fk-sp"><div class="fk-snum">19</div><div class="fk-slbl">kandidater</div></div><div class="fk-sp on"><div class="fk-snum">47 sek</div><div class="fk-slbl">hittad</div></div><div class="fk-sp"><div class="fk-snum">✓</div><div class="fk-slbl">behörig</div></div></div>
-          </div>
-          <div class="fk-scene" id="fks5">
-            <div class="fk-top"><h2>Och se helheten.</h2><div class="fk-sub">See the whole picture.</div></div>
-            <div class="fk-dash"><div class="fk-dsb"><div class="fk-sb-logo" style="padding:0 10%;margin-bottom:8%"><div class="fk-sb-icon"><span></span><span></span><span></span><span></span><span class="b"></span><span></span><span></span><span></span><span class="r"></span></div><div class="fk-sb-txt">Frånvaro<br>Kollen</div></div><div class="fk-nav on" style="font-size:10px;padding:6% 10%">Översikt</div><div class="fk-nav" style="font-size:10px;padding:5% 10%">Frånvaro</div><div class="fk-nav" style="font-size:10px;padding:5% 10%">Vikarier</div><div class="fk-nav" style="font-size:10px;padding:5% 10%">Schema</div><div class="fk-nav" style="font-size:10px;padding:5% 10%">Rapporter</div></div><div class="fk-dm"><div class="fk-dtr"><h3>Rektorns översikt <span style="font-weight:600;color:#8898aa">· denna termin</span></h3><div class="fk-dterm">HT 2025 · V. 16</div></div><div class="fk-kpi-row"><div class="fk-kc"><div class="fk-klbl">External sub cost</div><div class="fk-kval">184 200<sup>kr</sup></div><div class="fk-ksub">Externa vikarie&shy;kostnader</div><div class="fk-kbadge dn">−18% vs förra</div></div><div class="fk-kc"><div class="fk-klbl">Internal coverage</div><div class="fk-kval">68%</div><div class="fk-ksub">Intern täckningsgrad</div><div class="fk-kbadge ok">target 75%</div></div><div class="fk-kc"><div class="fk-klbl">Overload risk</div><div class="fk-kval">3 <span style="font-size:9px;font-weight:600">staff</span></div><div class="fk-ksub">Vid överbelastning</div><div class="fk-kbadge wn">klicka</div></div><div class="fk-kc"><div class="fk-klbl">Unnecessary ext.</div><div class="fk-kval">7 <span style="font-size:9px;font-weight:600">fall</span></div><div class="fk-ksub">Onödig extern</div><div class="fk-kbadge dn">−2 vs snitt</div></div></div><div class="fk-charts"><div class="fk-cb"><div class="fk-ct">Cover slots by day</div><div class="fk-barchart" id="fkBarChart"></div><div style="display:flex;justify-content:space-between;margin-top:2px"><div class="fk-bl">Mån</div><div class="fk-bl rl">Tis</div><div class="fk-bl">Ons</div><div class="fk-bl">Tor</div><div class="fk-bl">Fre</div></div><div class="fk-leg"><div class="fk-li"><div class="fk-ld" style="background:#12325A"></div>Internal</div><div class="fk-li"><div class="fk-ld" style="background:#E63946"></div>External</div></div></div><div class="fk-cb" style="animation-delay:1.3s"><div class="fk-ct">Who's covering</div><div class="fk-donut-wrap"><svg width="70" height="70" viewBox="0 0 70 70" style="flex-shrink:0"><circle cx="35" cy="35" r="26" fill="none" stroke="#e2e8f0" stroke-width="11"/><circle cx="35" cy="35" r="26" fill="none" stroke="#E63946" stroke-width="11" stroke-dasharray="62 101" stroke-dashoffset="0"/><circle cx="35" cy="35" r="26" fill="none" stroke="#1E7BFF" stroke-width="11" stroke-dasharray="39 124" stroke-dashoffset="-62"/><circle cx="35" cy="35" r="26" fill="none" stroke="#12325A" stroke-width="11" stroke-dasharray="26 137" stroke-dashoffset="-101"/><circle cx="35" cy="35" r="26" fill="none" stroke="#94a3b8" stroke-width="11" stroke-dasharray="36 127" stroke-dashoffset="-127"/><text x="35" y="32" text-anchor="middle" font-size="12" font-weight="900" fill="#12325A" font-family="Nunito">37</text><text x="35" y="42" text-anchor="middle" font-size="7" fill="#8898aa" font-family="Nunito" font-weight="600">covers</text></svg><div class="fk-dleg"><div class="fk-di"><div class="fk-dc" style="background:#E63946"></div>Erik L.<span class="fk-dp">38%</span></div><div class="fk-di"><div class="fk-dc" style="background:#1E7BFF"></div>Sara B.<span class="fk-dp">24%</span></div><div class="fk-di"><div class="fk-dc" style="background:#12325A"></div>Johan T.<span class="fk-dp">16%</span></div><div class="fk-di"><div class="fk-dc" style="background:#94a3b8"></div>Övriga<span class="fk-dp">22%</span></div></div></div></div></div></div></div>
-            <div class="fk-tip sav">−36 400 kr sparat denna termin</div>
-            <div class="fk-tip erik">Erik tar 29% — watch for burnout</div>
-          </div>
-        </div>
-        <!-- fk-anim script moved to page footer -->
+        <video
+          src="Franvarokollen_demo.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          style="width:100%;height:100%;object-fit:cover;display:block;"
+        ></video>
       </div>
     </div>
     </div>
@@ -1812,24 +1665,6 @@
   });
 
 
-  // ---- Frånvarokollen hero animation ----
-  document.addEventListener("DOMContentLoaded", function(){
-    var S=[{id:'fks1',dur:4200},{id:'fks2',dur:4200},{id:'fks3',dur:4200},{id:'fks4',dur:5600},{id:'fks5',dur:5800}];
-    var cur=0,tmr=null;
-    function show(i){
-      S.forEach(function(s,j){
-        var el=document.getElementById(s.id);
-        if(!el)return;
-        if(j===i){
-          var c=el.cloneNode(true);
-          el.parentNode.replaceChild(c,el);
-          c.classList.add('fk-active');
-          if(i===3)fkGrid(c);
-          if(i===4)fkBars(c);
-        } else {
-          el.classList.remove('fk-active');
-        }
-      });
     }
     function next(){cur=(cur+1)%S.length;show(cur);tmr=setTimeout(next,S[cur].dur);}
     function fkGrid(c){
