@@ -677,8 +677,10 @@
 
   /* small reveal */
   @media (prefers-reduced-motion:no-preference){
-    .reveal{opacity:0;transform:translateY(12px);transition:opacity .5s ease, transform .5s ease}
-    .reveal.in{opacity:1;transform:none}
+    .reveal{opacity:1;transform:none}
+    /* Safety fallback — if JS fails, reveals are still visible */
+    @media (prefers-reduced-motion: no-preference) {}
+    .no-js .reveal{opacity:1;transform:none}
   }
 
   /* ===== WAITLIST BANNER ===== */
@@ -1058,43 +1060,43 @@
             <div class="hm-label"></div><div class="hm-label"></div>
 
             <div class="hm-label">08</div>
-            <div class="hm-cell" style="background:#DCEAFF"></div>
-            <div class="hm-cell" style="background:#A8C8FF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
-            <div class="hm-cell" style="background:#A8C8FF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#DCEAFF"></div>
+            <div class="hm-cell in" style="background:#A8C8FF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#A8C8FF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
             <div class="hm-label"></div><div class="hm-label"></div>
 
             <div class="hm-label">09</div>
-            <div class="hm-cell" style="background:#1E7BFF"></div>
-            <div class="hm-cell" style="background:#1E7BFF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
-            <div class="hm-cell" style="background:#1E7BFF"></div>
-            <div class="hm-cell" style="background:#A8C8FF"></div>
+            <div class="hm-cell in" style="background:#1E7BFF"></div>
+            <div class="hm-cell in" style="background:#1E7BFF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#1E7BFF"></div>
+            <div class="hm-cell in" style="background:#A8C8FF"></div>
             <div class="hm-label"></div><div class="hm-label"></div>
 
             <div class="hm-label">10</div>
-            <div class="hm-cell" style="background:#0E5BC9"></div>
-            <div class="hm-cell" style="background:#0E5BC9"></div>
-            <div class="hm-cell" style="background:#0E5BC9"></div>
-            <div class="hm-cell" style="background:#1E7BFF"></div>
-            <div class="hm-cell" style="background:#1E7BFF"></div>
+            <div class="hm-cell in" style="background:#0E5BC9"></div>
+            <div class="hm-cell in" style="background:#0E5BC9"></div>
+            <div class="hm-cell in" style="background:#0E5BC9"></div>
+            <div class="hm-cell in" style="background:#1E7BFF"></div>
+            <div class="hm-cell in" style="background:#1E7BFF"></div>
             <div class="hm-label"></div><div class="hm-label"></div>
 
             <div class="hm-label">13</div>
-            <div class="hm-cell" style="background:#1E7BFF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
-            <div class="hm-cell" style="background:#A8C8FF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
-            <div class="hm-cell" style="background:#DCEAFF"></div>
+            <div class="hm-cell in" style="background:#1E7BFF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#A8C8FF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#DCEAFF"></div>
             <div class="hm-label"></div><div class="hm-label"></div>
 
             <div class="hm-label">14</div>
-            <div class="hm-cell" style="background:#A8C8FF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
-            <div class="hm-cell" style="background:#DCEAFF"></div>
-            <div class="hm-cell" style="background:#7FB6FF"></div>
-            <div class="hm-cell" style="background:#DCEAFF"></div>
+            <div class="hm-cell in" style="background:#A8C8FF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#DCEAFF"></div>
+            <div class="hm-cell in" style="background:#7FB6FF"></div>
+            <div class="hm-cell in" style="background:#DCEAFF"></div>
             <div class="hm-label"></div><div class="hm-label"></div>
           </div>
         </div>
@@ -1556,7 +1558,7 @@
           revealIo.unobserve(e.target);
         }
       });
-    }, { threshold:0.18 });
+    }, { threshold:0 });
     document.querySelectorAll('.reveal, .insight').forEach(el=>revealIo.observe(el));
 
     // Visibility tracker for the ambient loop (re-fires)
@@ -1665,35 +1667,13 @@
   });
 
 
-    }
-    function next(){cur=(cur+1)%S.length;show(cur);tmr=setTimeout(next,S[cur].dur);}
-    function fkGrid(c){
-      var w=c.querySelector('#fkTileGrid');if(!w)return;
-      var R=5,C=9,MR=3,MC=7,tiles=[];
-      for(var r=0;r<R;r++)for(var cc=0;cc<C;cc++){var el=document.createElement('div');el.className='fk-tile';w.appendChild(el);tiles.push({el:el,r:r,c:cc});}
-      var step=0,max=R+C-2;
-      function sweep(){
-        tiles.forEach(function(tt){var d=(C-1-tt.c)+tt.r;if(d<=step&&!(tt.r===MR&&tt.c===MC))tt.el.classList.add('lit');});
-        step++;
-        if(step<=max)setTimeout(sweep,70);
-        else setTimeout(function(){tiles.forEach(function(tt){if(tt.r===MR&&tt.c===MC){tt.el.classList.remove('lit');tt.el.classList.add('match');}else tt.el.classList.remove('lit');});},200);
-      }
-      setTimeout(sweep,300);
-    }
-    function fkBars(c){
-      var chart=c.querySelector('#fkBarChart');if(!chart)return;
-      var data=[[28,12],[36,22],[20,14],[16,10],[26,16]];
-      data.forEach(function(d,i){
-        var g=document.createElement('div');g.className='fk-bg';
-        var st=document.createElement('div');st.className='fk-bst';st.style.height=(d[0]+d[1])+'px';
-        var ext=document.createElement('div');ext.className='fk-bs ext';ext.style.cssText='height:0;transition:height .9s '+(0.3+i*.08)+'s cubic-bezier(.22,1,.36,1)';
-        var inn=document.createElement('div');inn.className='fk-bs int';inn.style.cssText='height:0;transition:height .9s '+(0.3+i*.08)+'s cubic-bezier(.22,1,.36,1)';
-        st.appendChild(ext);st.appendChild(inn);g.appendChild(st);chart.appendChild(g);
-        requestAnimationFrame(function(){requestAnimationFrame(function(){inn.style.height=d[0]+'px';ext.style.height=d[1]+'px';});});
-      });
-    }
-    show(0);tmr=setTimeout(next,S[0].dur);
-  });
+
+  // Animate all insight cards — script is at bottom so DOM is ready
+  setTimeout(function(){
+    document.querySelectorAll('.insight').forEach(function(el){
+      animateInsight(el);
+    });
+  }, 300);
 
 </script>
 
