@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Frånvarokollen — Frånvaro, vikarier och bemanning för svenska skolor</title>
+<meta name="description" content="Frånvarokollen hittar rätt vikarie på sekunder — utifrån schema, belastning och behörighet. All data inom EU. GDPR-anpassat. Lansering 2026." />
+<link rel="canonical" href="https://franvarokollen.com/" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
+<link rel="shortcut icon" href="favicon.ico" />
+<meta name="theme-color" content="#12325A" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Frånvarokollen" />
+<meta property="og:title" content="Frånvarokollen — Frånvaro, vikarier och bemanning för svenska skolor" />
+<meta property="og:description" content="Slipp morgonkaoset. Frånvarokollen samlar frånvaro, vikarieförslag och uppföljning i ett tydligt verktyg." />
+<meta property="og:url" content="https://franvarokollen.com/" />
+<meta property="og:image" content="https://franvarokollen.com/og-image.png" />
+<meta property="og:locale" content="sv_SE" />
+<meta property="og:locale:alternate" content="en_GB" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Frånvarokollen" />
+<meta name="twitter:description" content="Slipp morgonkaoset. Frånvaro, vikarier och bemanning för svenska skolor." />
+<meta name="twitter:image" content="https://franvarokollen.com/og-image.png" />
+<meta name="robots" content="index,follow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#12325A;--navy-deep:#0C2545;--blue:#1E7BFF;--blue-light:#7FB6FF;
+    --red:#E63946;--cream:#F6F4EF;--cream-deep:#EFEBE2;--ink:#0E1B30;
+    --muted:#5C6A82;--line:#E4DFD4;--white:#ffffff;
+    --shadow:6px 6px 0 var(--ink);--shadow-sm:4px 4px 0 var(--ink);
+    --radius:14px;--radius-sm:10px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:'Nunito',system-ui,sans-serif;font-weight:400;color:var(--ink);background:var(--cream);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  img,svg,video{display:block;max-width:100%}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--blue);margin:0 0 14px}
+  h1,h2,h3{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:-0.01em;line-height:1.15;margin:0}
+  h2{font-size:clamp(28px,3.4vw,42px);color:var(--navy)}
+  h3{font-size:20px;color:var(--navy)}
+  p{margin:0}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:var(--radius-sm);font-weight:700;font-size:15px;border:2px solid var(--ink);box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease;cursor:pointer}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow)}
+  .btn:active{transform:translate(0,0);box-shadow:2px 2px 0 var(--ink)}
+  .btn-red{background:var(--red);color:#fff}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,0.4);box-shadow:none}
+  .btn-ghost:hover{background:rgba(255,255,255,0.08);transform:none;box-shadow:none}
+  .link-button{background:none;border:none;color:inherit;cursor:pointer;padding:0;font:inherit;text-decoration:underline}
+  .reveal{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+  .reveal.in{opacity:1;transform:none}
+  section{padding:96px 0}
+  .section-head{max-width:720px;margin:0 auto 56px;text-align:center}
+  .section-head p{margin-top:14px;color:var(--muted);font-size:17px}
+
+  /* Nav */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(246,244,239,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{width:36px;height:36px;flex:none}
+  .brand-name{font-weight:800;color:var(--navy);font-size:18px}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-weight:600;font-size:14px;color:var(--ink);opacity:0.72;transition:opacity .15s}
+  .nav-links a:hover{opacity:1;color:var(--navy)}
+  .nav-actions{display:flex;align-items:center;gap:12px}
+  .lang{display:flex;background:var(--cream-deep);border-radius:8px;padding:3px;border:1px solid var(--line)}
+  .lang button{padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;color:var(--muted);transition:all .15s}
+  .lang button.active{background:var(--navy);color:#fff}
+  .nav-cta{padding:10px 18px;background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:8px;font-weight:800;font-size:14px;box-shadow:var(--shadow-sm);transition:transform .12s,box-shadow .12s}
+  .nav-cta:hover{transform:translate(-1px,-1px);box-shadow:var(--shadow)}
+  .nav-toggle{display:none;width:40px;height:40px;border-radius:8px;background:var(--cream-deep);align-items:center;justify-content:center}
+  .nav-toggle svg{width:20px;height:20px}
+  .mobile-menu{display:none;border-top:1px solid var(--line);padding:16px 24px 20px;background:var(--cream)}
+  .mobile-menu.open{display:flex;flex-direction:column;gap:14px}
+  .mobile-menu a,.mobile-menu .link-button{font-weight:600;font-size:15px;color:var(--ink)}
+
+  /* Banner */
+  .waitlist-banner{background:var(--red);color:#fff;overflow:hidden;border-bottom:2px solid var(--ink);position:relative;cursor:pointer}
+  .waitlist-banner-track{display:flex;width:max-content;animation:marquee 32s linear infinite}
+  .waitlist-banner-inner{display:inline-flex;align-items:center;gap:18px;padding:11px 18px;font-size:14px;font-weight:700;white-space:nowrap}
+  .banner-sep{opacity:0.55;font-size:12px}
+  .banner-pill{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);padding:3px 10px;border-radius:999px;font-size:13px}
+  .banner-dismiss{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:6px;background:rgba(0,0,0,0.18);color:#fff;font-size:18px;line-height:1;z-index:2}
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* Hero */
+  .hero{background:var(--navy);color:#fff;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)}
+  .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+  .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:72px 0 96px;position:relative}
+  .hero h1{font-size:clamp(34px,4.4vw,56px);color:#fff;margin-bottom:20px}
+  .hero h1 .accent{color:var(--blue-light)}
+  .hero-eyebrow{color:var(--blue-light);margin-bottom:18px}
+  .hero-lead{font-size:17px;color:rgba(255,255,255,0.78);max-width:520px;margin-bottom:32px}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px}
+  .hero-trust{display:flex;gap:24px;flex-wrap:wrap;padding-top:24px;border-top:1px solid rgba(255,255,255,0.12)}
+  .hero-trust-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.7)}
+  .hero-trust-item .dot{width:6px;height:6px;border-radius:50%;background:var(--blue-light)}
+  .hero-trust-item:nth-child(2) .dot{background:#43C77F}
+  .hero-trust-item:nth-child(3) .dot{background:var(--red)}
+
+  /* Mockup */
+  .hero-mockup{background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:var(--radius);box-shadow:8px 8px 0 rgba(0,0,0,0.35);width:100%;max-width:480px;margin:0 auto;overflow:hidden}
+  .mockup-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--cream-deep);border-bottom:2px solid var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--muted)}
+  .mockup-head strong{color:var(--navy)}
+  .mockup-body{padding:18px}
+  .mockup-sick-row{display:flex;align-items:center;gap:12px;padding:12px;border:1.5px solid var(--line);border-radius:10px;margin-bottom:16px;background:#FFF7F8}
+  .mockup-avatar{width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none}
+  .mockup-sick-info{flex:1}
+  .mockup-name{font-weight:800;font-size:14px;color:var(--navy)}
+  .mockup-meta{font-size:12px;color:var(--muted)}
+  .mockup-badge{background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:0.05em}
+  .mockup-section-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px}
+  .mockup-candidate{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;margin-bottom:8px;font-size:13px}
+  .mockup-candidate.top{border-color:var(--blue);background:#F0F7FF}
+  .mockup-check{width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+  .mockup-check.empty{background:transparent;border:1.5px solid var(--line)}
+  .mockup-cname{font-weight:700;color:var(--navy);flex:1}
+  .mockup-pick{background:var(--navy);color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700}
+  .mockup-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1.5px dashed var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .mockup-footer strong{color:var(--navy);font-weight:700}
+
+  /* Video */
+  .video-section{background:var(--cream);border-bottom:1px solid var(--line)}
+  .video-frame{position:relative;max-width:1040px;margin:0 auto;border:3px solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;background:#000;aspect-ratio:16/9}
+  .video-el{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+  .video-play-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(180deg,rgba(18,50,90,0.25) 0%,rgba(18,50,90,0.55) 100%);cursor:pointer;transition:opacity .25s ease,background .25s ease;color:#fff}
+  .video-play-overlay:hover{background:linear-gradient(180deg,rgba(18,50,90,0.15) 0%,rgba(18,50,90,0.45) 100%)}
+  .video-play-overlay[hidden]{display:none}
+  .video-play-circle{width:96px;height:96px;border-radius:50%;background:var(--red);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);display:flex;align-items:center;justify-content:center;color:#fff;padding-left:6px;transition:transform .15s ease,box-shadow .15s ease}
+  .video-play-overlay:hover .video-play-circle{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+  .video-play-label{font-weight:800;font-size:15px;letter-spacing:0.02em;background:rgba(14,27,48,0.7);padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2)}
+  .video-mute-toggle{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:8px;background:rgba(14,27,48,0.7);border:1.5px solid rgba(255,255,255,0.25);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s;z-index:2}
+  .video-mute-toggle:hover{background:rgba(14,27,48,0.9);transform:scale(1.05)}
+  .video-mute-toggle[hidden]{display:none}
+  .video-caption{text-align:center;margin-top:18px;font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:600}
+
+  /* Features */
+  .features{background:var(--cream)}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature{background:#fff;border:2px solid var(--ink);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);transition:transform .15s ease,box-shadow .15s ease}
+  .feature:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow)}
+  .feature-icon{width:48px;height:48px;border-radius:10px;background:var(--cream-deep);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:var(--navy)}
+  .feature:nth-child(1) .feature-icon{background:#DCEAFF}
+  .feature:nth-child(2) .feature-icon{background:#E5F7EC}
+  .feature:nth-child(3) .feature-icon{background:#FFE5E7}
+  .feature:nth-child(4) .feature-icon{background:#FFF1D6}
+  .feature:nth-child(5) .feature-icon{background:#E8E2FB}
+  .feature:nth-child(6) .feature-icon{background:#DCEAFF}
+  .feature h3{margin-bottom:8px}
+  .feature p{color:var(--muted);font-size:15px}
+
+  /* Security */
+  .security{background:var(--navy);color:#fff;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+  .security .section-head h2{color:#fff}
+  .security .section-head p{color:rgba(255,255,255,0.72)}
+  .security .section-head .eyebrow{color:var(--blue-light)}
+  .security-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .sec-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius);padding:28px}
+  .sec-card h3{color:#fff;margin-bottom:8px;font-size:18px}
+  .sec-card p{color:rgba(255,255,255,0.7);font-size:14px}
+  .sec-icon{width:40px;height:40px;border-radius:8px;background:rgba(30,123,255,0.18);color:var(--blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+
+  /* Contact */
+  .contact{background:var(--cream)}
+  .contact-card{max-width:780px;margin:0 auto;background:#fff;border:2px solid var(--ink);border-radius:var(--radius);padding:48px;box-shadow:var(--shadow);text-align:center}
+  .contact-card h2{margin-bottom:14px}
+  .contact-card>p{color:var(--muted);margin-bottom:28px;font-size:17px}
+  .contact-ctas{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+  .contact-meta{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+  .contact-meta strong{color:var(--ink);font-weight:700}
+
+  /* Footer */
+  .footer{background:var(--navy-deep);color:rgba(255,255,255,0.7);padding:56px 0 32px;border-top:3px solid var(--ink)}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .footer h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#fff;margin:0 0 16px;font-family:'JetBrains Mono',monospace}
+  .footer ul{list-style:none;padding:0;margin:0}
+  .footer li{margin-bottom:10px}
+  .footer a,.footer .link-button{font-size:14px;color:rgba(255,255,255,0.65);transition:color .15s}
+  .footer a:hover,.footer .link-button:hover{color:#fff}
+  .footer-brand .brand-name{color:#fff}
+  .footer-brand p{font-size:14px;color:rgba(255,255,255,0.6);max-width:300px;margin-top:14px}
+  .footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:13px;color:rgba(255,255,255,0.5)}
+
+  /* Modal */
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(14,27,48,0.6);z-index:100;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto}
+  .modal-backdrop.open{display:flex}
+  .modal{background:#fff;border:2px solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:520px;overflow:hidden;position:relative}
+  .modal-header{padding:28px 28px 16px;border-bottom:1px solid var(--line);position:relative}
+  .modal-header h3{font-size:22px;margin-bottom:6px}
+  .modal-header p{color:var(--muted);font-size:14px}
+  .modal-close{position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:8px;background:var(--cream-deep);color:var(--ink);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .modal-body{padding:24px 28px 28px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .form-field{display:flex;flex-direction:column;margin-bottom:14px}
+  .form-field label{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+  .form-field .req{color:var(--red);margin-left:2px}
+  .form-field input,.form-field textarea{font-family:inherit;font-size:14px;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);transition:border-color .12s}
+  .form-field input:focus,.form-field textarea:focus{outline:none;border-color:var(--blue)}
+  .form-field textarea{min-height:90px;resize:vertical}
+  .form-submit{width:100%;padding:14px 22px;background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:8px;font-weight:800;font-size:15px;box-shadow:var(--shadow-sm);transition:transform .12s,box-shadow .12s;margin-top:6px}
+  .form-submit:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow)}
+  .form-submit:disabled{opacity:0.6;transform:none;cursor:wait;box-shadow:var(--shadow-sm)}
+  .form-error{display:none;padding:10px 12px;background:#FFE5E7;border:1.5px solid var(--red);border-radius:8px;color:var(--red);font-size:13px;font-weight:700;margin-bottom:14px}
+  .form-note{margin-top:12px;font-size:12px;color:var(--muted);text-align:center}
+  .modal-success{display:none;padding:48px 28px;text-align:center}
+  .modal-success.show{display:block}
+  .success-icon{font-size:48px;margin-bottom:16px}
+  .modal-success h3{margin-bottom:8px;font-size:22px}
+  .modal-success p{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .hp-trap{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;pointer-events:none}
+
+  /* Responsive */
+  @media(max-width:960px){.nav-links{display:none}.nav-toggle{display:flex}.feature-grid{grid-template-columns:repeat(2,1fr)}.security-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:768px){.hero-inner{grid-template-columns:1fr;gap:36px;padding:56px 0 72px}.hero-mockup{max-width:420px}section{padding:64px 0}.section-head{margin-bottom:40px}}
+  @media(max-width:640px){.container{padding:0 18px}.nav-cta{display:none}.feature-grid{grid-template-columns:1fr}.security-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr;gap:24px}section{padding:48px 0}.hero h1{font-size:30px}.hero-lead{font-size:15px}.contact-card{padding:32px 24px}.video-frame{border-width:2px;box-shadow:var(--shadow-sm)}.video-play-circle{width:72px;height:72px;box-shadow:4px 4px 0 var(--ink)}.video-play-circle svg{width:28px;height:28px}.video-play-label{font-size:13px;padding:6px 12px}.modal-backdrop{padding:24px 12px}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="./" class="brand" aria-label="Frånvarokollen home">
+      <svg class="brand-mark" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="320" height="320" rx="52" fill="#F6F4EF"/>
+        <g transform="translate(-72,-28) scale(1.16)">
+          <path fill="#0e70f4" d="m246.56 187.85c-1.65-.43-7.97-.83-14.05-.9-11.42-.12-13.45-.79-13.45-4.39 0-1.03 2.41-4.43 5.36-7.55 2.95-3.12 5.92-6.74 6.59-8.04 1.14-2.19.8-2.77-4.64-8.07-10.17-9.89-28.58-21.02-41.44-25.05-11.66-3.65-14.88-2.33-14.88 6.11 0 6.17-.99 6.56-3 9.17-.96 1.24-3.37 3.81-4.46 4.79-1.55 1.39-11.59 1.91-36.45 1.91-27.05 0-28.13-.22-32.56-6.74l-2.53-3.72v-28.54-28.54l2.53-3.72c4.5-6.62 5.16-6.74 35.96-6.74 25.51 0 27.88.15 31.47 1.98 5.82 2.97 8.25 7.07 8.99 15.16.45 4.93 1.19 7.45 2.61 8.87 2 2 13.94 7.36 24.94 11.19 15.22 5.3 37.81 19.33 49.22 30.58 5.02 4.95 5.49 4.86 13.64-2.42 3.67-3.28 5.67-4.35 8.18-4.35 2.56 0 3.5.52 4.07 2.25.88 2.66.7 20.77-.36 36.25l-.75 11-11 .15c-6.05.08-12.35-.2-14-.63z"/>
+          <path fill="#e4223d" d="m242.06 246.5c-10.34-4.84-11.48-8.22-11.49-34.17v-20l11 .18c6.05.1 15.28.48 20.51.84 8.95.62 9.63.53 11.5-1.54 1.6-1.77 2.09-4.1 2.51-12.14.38-7.23.93-10.21 2-10.88.81-.51 5.82-.94 11.13-.95l9.65.92 5.97 1.68 4.48 5.91-.09 8.56c-.06 5.8-.04 50.76-1.75 54.05-1.71 3.3-6.51 6.86-9.27 6.86-1.12 0-2.31.45-2.65 1-.91 1.48-50.29 1.17-53.5-.33z"/>
+        </g>
+      </svg>
+      <span class="brand-name">Frånvarokollen</span>
+    </a>
+    <nav class="nav-links" aria-label="Huvudmeny">
+      <a href="#video" data-i18n="nav.video">Demo</a>
+      <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
+      <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
+      <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="lang" role="group" aria-label="Språk">
+        <button class="active" data-lang-btn="sv" aria-pressed="true">SV</button>
+        <button data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="nav-cta" data-waitlist data-i18n="nav.cta">Gå med i väntelistan</button>
+      <button class="nav-toggle" aria-label="Öppna meny" id="navToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#video" data-i18n="nav.video">Demo</a>
+    <a href="#funktioner" data-i18n="nav.features">Funktioner</a>
+    <a href="#sakerhet" data-i18n="nav.security">Säkerhet</a>
+    <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
+    <button class="link-button" data-waitlist data-i18n="nav.cta">Gå med i väntelistan</button>
+  </div>
+</header>
+
+<div class="waitlist-banner" id="waitlistBanner" role="region" aria-label="Väntelista">
+  <div class="waitlist-banner-track">
+    <div class="waitlist-banner-inner">
+      <span data-i18n="banner.1">🎉 Anmäl er skola till väntelistan</span><span class="banner-sep">✦</span>
+      <span data-i18n="banner.2">Begränsat antal pilotplatser</span><span class="banner-sep">✦</span>
+      <span data-i18n="banner.3">Lansering 2026</span><span class="banner-sep">·····</span>
+      <span class="banner-pill" data-i18n="banner.cta">Gå med i väntelistan →</span><span class="banner-sep">·····</span>
+    </div>
+    <div class="waitlist-banner-inner" aria-hidden="true">
+      <span data-i18n="banner.1">🎉 Anmäl er skola till väntelistan</span><span class="banner-sep">✦</span>
+      <span data-i18n="banner.2">Begränsat antal pilotplatser</span><span class="banner-sep">✦</span>
+      <span data-i18n="banner.3">Lansering 2026</span><span class="banner-sep">·····</span>
+      <span class="banner-pill" data-i18n="banner.cta">Gå med i väntelistan →</span><span class="banner-sep">·····</span>
+    </div>
+  </div>
+  <button class="banner-dismiss" id="dismissBanner" aria-label="Stäng">×</button>
+</div>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">06:45 · EN LÄRARE RINGER IN SJUK</p>
+      <h1 data-i18n="hero.title">Fyra lektioner att täcka. Tjugo personer att kolla. <span class="accent">Fjorton minuter kvar.</span></h1>
+      <p class="hero-lead" data-i18n="hero.lead">Morgonkaoset i svenska skolor är ett lösbart problem. Frånvarokollen hittar rätt vikarie på sekunder — utifrån schema, belastning och behörighet. Du bestämmer. Vi gör letarbetet.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-red" data-waitlist data-i18n="hero.cta_primary">Gå med i väntelistan →</button>
+        <a class="btn btn-ghost" href="#video" data-i18n="hero.cta_secondary">Se demo (23 sek)</a>
+      </div>
+      <div class="hero-trust">
+        <span class="hero-trust-item"><span class="dot"></span><span data-i18n="hero.trust_1">All data inom EU</span></span>
+        <span class="hero-trust-item"><span class="dot"></span><span data-i18n="hero.trust_2">GDPR-anpassat</span></span>
+        <span class="hero-trust-item"><span class="dot"></span><span data-i18n="hero.trust_3">Byggt för svenska skolor</span></span>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-mockup">
+        <div class="mockup-head">
+          <strong data-i18n="mockup.title">Frånvaro idag</strong>
+          <span>06:48</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-sick-row">
+            <div class="mockup-avatar">MJ</div>
+            <div class="mockup-sick-info">
+              <div class="mockup-name">Maria Johansson</div>
+              <div class="mockup-meta" data-i18n="mockup.meta">5B · Matematik · 4 lektioner</div>
+            </div>
+            <div class="mockup-badge" data-i18n="mockup.sick">SJUK</div>
+          </div>
+          <div class="mockup-section-label" data-i18n="mockup.suggestions">Föreslagna vikarier</div>
+          <div class="mockup-candidate top">
+            <div class="mockup-check">✓</div>
+            <div class="mockup-cname">Sara Sjöberg</div>
+            <div class="mockup-pick" data-i18n="mockup.pick">Välj</div>
+          </div>
+          <div class="mockup-candidate">
+            <div class="mockup-check empty"></div>
+            <div class="mockup-cname">Erik Nyström</div>
+            <div class="mockup-pick" data-i18n="mockup.pick">Välj</div>
+          </div>
+          <div class="mockup-candidate">
+            <div class="mockup-check empty"></div>
+            <div class="mockup-cname">Johan Bergström</div>
+            <div class="mockup-pick" data-i18n="mockup.pick">Välj</div>
+          </div>
+          <div class="mockup-footer">
+            <span><strong>47 sek</strong> <span data-i18n="mockup.found">till en lösning</span></span>
+            <span><strong>1 klick</strong> <span data-i18n="mockup.confirm">för att bekräfta</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="video-section" id="video">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="video.eyebrow">SE FRÅNVAROKOLLEN I AKTION</p>
+      <h2 data-i18n="video.title">23 sekunder. Hela arbetsflödet.</h2>
+      <p data-i18n="video.lead">Från sjukanmälan kl. 06:45 till bekräftad vikarie — utan telefonköer och kalkylblad.</p>
+    </div>
+    <div class="video-frame reveal">
+      <video id="demoVideo" class="video-el" autoplay muted loop playsinline preload="metadata" aria-label="Frånvarokollen produktdemo">
+        <source src="hero.mp4" type="video/mp4" />
+        <p data-i18n="video.fallback">Din webbläsare stödjer inte video.</p>
+      </video>
+      <button class="video-play-overlay" id="videoPlayOverlay" aria-label="Spela upp med ljud">
+        <span class="video-play-circle">
+          <svg viewBox="0 0 32 32" width="36" height="36" aria-hidden="true"><path d="M10 6 L26 16 L10 26 Z" fill="currentColor"/></svg>
+        </span>
+        <span class="video-play-label" data-i18n="video.play_label">Spela upp med ljud</span>
+      </button>
+      <button class="video-mute-toggle" id="videoMuteToggle" aria-label="Stäng av ljud" hidden>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </button>
+    </div>
+    <p class="video-caption" data-i18n="video.caption">Ljud avstängt som standard. Klicka på spela-knappen för att starta om med ljud.</p>
+  </div>
+</section>
+
+<section class="features" id="funktioner">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="features.eyebrow">FUNKTIONER</p>
+      <h2 data-i18n="features.title">Allt en vikariesamordnare behöver. Inget onödigt.</h2>
+      <p data-i18n="features.lead">Utvecklat tillsammans med skolpersonal, för skolpersonal. Inga onödiga funktioner — bara det som behövs när morgonen är som mest intensiv.</p>
+    </div>
+    <div class="feature-grid">
+      <article class="feature reveal">
+        <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+        <h3 data-i18n="f1.title">Dagens bemanning</h3>
+        <p data-i18n="f1.body">Se direkt vilka som är på plats, vilka som är lediga och vilka lektioner som pågår. Markera frånvaro med ett klick.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <h3 data-i18n="f2.title">Lektion och klass</h3>
+        <p data-i18n="f2.body">Se klass, sal och tid för varje lektion som behöver vikarie. Inget letande i schemat.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+        <h3 data-i18n="f3.title">Bemanningsöversikt</h3>
+        <p data-i18n="f3.body">Följ hur vikariaten fördelas och se om någon får ta för mycket. En tydlig översikt för rektor, administration och HR.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
+        <h3 data-i18n="f4.title">Externa vikarier och kostnader</h3>
+        <p data-i18n="f4.body">Lägg in externa vikarier och följ kostnaderna löpande. Enklare budgetuppföljning utan extra manuellt arbete.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3 data-i18n="f5.title">Mindre administration</h3>
+        <p data-i18n="f5.body">En enda vy för dagens bemanning. Inga kalkylblad att uppdatera, inga listor att skriva ut.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6"/></svg></div>
+        <h3 data-i18n="f6.title">Rapporter till Excel</h3>
+        <p data-i18n="f6.body">Ta fram rapporter för rektor, ekonomi och SCB. Exportera till Excel när du behöver.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="security" id="sakerhet">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow" data-i18n="sec.eyebrow">SÄKERHET OCH INTEGRITET</p>
+      <h2 data-i18n="sec.title">Byggt för svenska skolors vardag</h2>
+      <p data-i18n="sec.lead">Frånvaro och bemanning innehåller känsliga personuppgifter. Därför är Frånvarokollen byggt med GDPR och svenska dataskyddskrav som grund.</p>
+    </div>
+    <div class="security-grid">
+      <div class="sec-card reveal">
+        <div class="sec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/></svg></div>
+        <h3 data-i18n="sec1.title">All data lagras inom EU</h3>
+        <p data-i18n="sec1.body">Lagring och säkerhetskopior hanteras på servrar inom EU. Ingen överföring av data till länder utanför EU.</p>
+      </div>
+      <div class="sec-card reveal">
+        <div class="sec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3 data-i18n="sec2.title">Anpassat för GDPR</h3>
+        <p data-i18n="sec2.body">Personuppgiftsbiträdesavtal ingår. Stöd finns för rättslig grund, behörighetsstyrning och gallringsrutiner.</p>
+      </div>
+      <div class="sec-card reveal">
+        <div class="sec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3 3-2-2"/></svg></div>
+        <h3 data-i18n="sec3.title">Roller och spårbarhet</h3>
+        <p data-i18n="sec3.body">Behörigheter styrs efter roll — rektor, samordnare, lärare. Alla ändringar sparas i en tydlig logg, så det går alltid att följa upp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="kontakt">
+  <div class="container">
+    <div class="contact-card reveal">
+      <p class="eyebrow" data-i18n="contact.eyebrow">KOM IGÅNG</p>
+      <h2 data-i18n="contact.title">Vill ni se hur Frånvarokollen fungerar på er skola?</h2>
+      <p data-i18n="contact.lead">Vi visar hur Frånvarokollen kan användas utifrån er skolas storlek, system och arbetssätt. Hör av er så bokar vi en kort genomgång.</p>
+      <div class="contact-ctas">
+        <button class="btn btn-red" data-waitlist data-i18n="contact.cta_primary">Gå med i väntelistan →</button>
+      </div>
+      <div class="contact-meta">
+        <span><strong data-i18n="contact.email_label">E-post:</strong> info@franvarokollen.com</span>
+        <span><strong data-i18n="contact.location_label">Plats:</strong> Stockholm, Sverige</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="320" height="320" rx="52" fill="#F6F4EF"/>
+            <g transform="translate(-72,-28) scale(1.16)">
+              <path fill="#0e70f4" d="m246.56 187.85c-1.65-.43-7.97-.83-14.05-.9-11.42-.12-13.45-.79-13.45-4.39 0-1.03 2.41-4.43 5.36-7.55 2.95-3.12 5.92-6.74 6.59-8.04 1.14-2.19.8-2.77-4.64-8.07-10.17-9.89-28.58-21.02-41.44-25.05-11.66-3.65-14.88-2.33-14.88 6.11 0 6.17-.99 6.56-3 9.17-.96 1.24-3.37 3.81-4.46 4.79-1.55 1.39-11.59 1.91-36.45 1.91-27.05 0-28.13-.22-32.56-6.74l-2.53-3.72v-28.54-28.54l2.53-3.72c4.5-6.62 5.16-6.74 35.96-6.74 25.51 0 27.88.15 31.47 1.98 5.82 2.97 8.25 7.07 8.99 15.16.45 4.93 1.19 7.45 2.61 8.87 2 2 13.94 7.36 24.94 11.19 15.22 5.3 37.81 19.33 49.22 30.58 5.02 4.95 5.49 4.86 13.64-2.42 3.67-3.28 5.67-4.35 8.18-4.35 2.56 0 3.5.52 4.07 2.25.88 2.66.7 20.77-.36 36.25l-.75 11-11 .15c-6.05.08-12.35-.2-14-.63z"/>
+              <path fill="#e4223d" d="m242.06 246.5c-10.34-4.84-11.48-8.22-11.49-34.17v-20l11 .18c6.05.1 15.28.48 20.51.84 8.95.62 9.63.53 11.5-1.54 1.6-1.77 2.09-4.1 2.51-12.14.38-7.23.93-10.21 2-10.88.81-.51 5.82-.94 11.13-.95l9.65.92 5.97 1.68 4.48 5.91-.09 8.56c-.06 5.8-.04 50.76-1.75 54.05-1.71 3.3-6.51 6.86-9.27 6.86-1.12 0-2.31.45-2.65 1-.91 1.48-50.29 1.17-53.5-.33z"/>
+            </g>
+          </svg>
+          <span class="brand-name">Frånvarokollen</span>
+        </div>
+        <p data-i18n="footer.tagline">Frånvaro, vikarier och bemanning för svenska skolor. All data inom EU och systemet är anpassat för GDPR.</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer.product">Produkt</h4>
+        <ul>
+          <li><a href="#video" data-i18n="nav.video">Demo</a></li>
+          <li><a href="#funktioner" data-i18n="nav.features">Funktioner</a></li>
+          <li><a href="#sakerhet" data-i18n="nav.security">Säkerhet</a></li>
+          <li><button class="link-button" data-waitlist data-i18n="nav.cta">Gå med i väntelistan</button></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.company">Företag</h4>
+        <ul>
+          <li><a href="#kontakt" data-i18n="nav.contact">Kontakt</a></li>
+          <li><a href="mailto:info@franvarokollen.com">info@franvarokollen.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.legal">Juridik</h4>
+        <ul>
+          <li><a href="privacy.html" data-i18n="footer.privacy">Integritetspolicy</a></li>
+          <li><a href="terms.html" data-i18n="footer.terms">Villkor</a></li>
+          <li><a href="dpa.html" data-i18n="footer.dpa">DPA / PuB-avtal</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Frånvarokollen Sverige AB · <span data-i18n="footer.org">Org.nr: 559585-6450</span></span>
+      <span data-i18n="footer.made">Byggd i Sverige</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="waitlistModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <p class="eyebrow" data-i18n="modal.eyebrow">VÄNTELISTAN</p>
+      <h3 id="modalTitle" data-i18n="modal.title">Anmäl er skola till pilotprogrammet</h3>
+      <p data-i18n="modal.lead">Begränsat antal platser. Fyll i formuläret så hör vi av oss.</p>
+      <button class="modal-close" id="closeModal" aria-label="Stäng">×</button>
+    </div>
+    <div class="modal-body" id="modalFormBody">
+      <div class="form-error" id="formError"></div>
+      <div class="hp-trap" aria-hidden="true">
+        <label for="f_company_website">Företagets webbplats (lämna tom)</label>
+        <input type="text" id="f_company_website" name="company_website" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="f_namn" data-i18n="modal.label_name">Namn <span class="req">*</span></label>
+          <input type="text" id="f_namn" autocomplete="name" placeholder="För- och efternamn" maxlength="100" required>
+        </div>
+        <div class="form-field">
+          <label for="f_skola" data-i18n="modal.label_school">Skola <span class="req">*</span></label>
+          <input type="text" id="f_skola" placeholder="Skolans namn" maxlength="150" required>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="f_epost" data-i18n="modal.label_email">E-postadress <span class="req">*</span></label>
+        <input type="email" id="f_epost" autocomplete="email" placeholder="namn@skola.se" maxlength="200" required>
+      </div>
+      <div class="form-field">
+        <label for="f_kommentarer" data-i18n="modal.label_comments">Kommentarer</label>
+        <textarea id="f_kommentarer" placeholder="Berätta gärna om er skola, antal elever, nuvarande system…" maxlength="2000"></textarea>
+      </div>
+      <button class="form-submit" id="formSubmit" data-i18n="modal.submit">Anmäl oss till väntelistan →</button>
+      <p class="form-note" data-i18n="modal.note">Dina uppgifter används enbart för att kontakta er angående pilotprogrammet.</p>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">🎉</div>
+      <h3 data-i18n="modal.success_title">Tack för er anmälan!</h3>
+      <p data-i18n="modal.success_body">Vi hör av oss inom kort för att boka en genomgång anpassad för er skola.</p>
+      <button class="btn btn-red" id="closeSuccess" data-i18n="modal.success_close">Stäng</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const translations = {
+  sv: {
+    'nav.video':'Demo','nav.features':'Funktioner','nav.security':'Säkerhet','nav.contact':'Kontakt','nav.cta':'Gå med i väntelistan',
+    'banner.1':'🎉 Anmäl er skola till väntelistan','banner.2':'Begränsat antal pilotplatser','banner.3':'Lansering 2026','banner.cta':'Gå med i väntelistan →',
+    'hero.eyebrow':'06:45 · EN LÄRARE RINGER IN SJUK',
+    'hero.title':'Fyra lektioner att täcka. Tjugo personer att kolla. <span class="accent">Fjorton minuter kvar.</span>',
+    'hero.lead':'Morgonkaoset i svenska skolor är ett lösbart problem. Frånvarokollen hittar rätt vikarie på sekunder — utifrån schema, belastning och behörighet. Du bestämmer. Vi gör letarbetet.',
+    'hero.cta_primary':'Gå med i väntelistan →','hero.cta_secondary':'Se demo (23 sek)',
+    'hero.trust_1':'All data inom EU','hero.trust_2':'GDPR-anpassat','hero.trust_3':'Byggt för svenska skolor',
+    'mockup.title':'Frånvaro idag','mockup.meta':'5B · Matematik · 4 lektioner','mockup.sick':'SJUK',
+    'mockup.suggestions':'Föreslagna vikarier','mockup.pick':'Välj','mockup.found':'till en lösning','mockup.confirm':'för att bekräfta',
+    'video.eyebrow':'SE FRÅNVAROKOLLEN I AKTION','video.title':'23 sekunder. Hela arbetsflödet.',
+    'video.lead':'Från sjukanmälan kl. 06:45 till bekräftad vikarie — utan telefonköer och kalkylblad.',
+    'video.play_label':'Spela upp med ljud','video.caption':'Ljud avstängt som standard. Klicka på spela-knappen för att starta om med ljud.','video.fallback':'Din webbläsare stödjer inte video.',
+    'features.eyebrow':'FUNKTIONER','features.title':'Allt en vikariesamordnare behöver. Inget onödigt.',
+    'features.lead':'Utvecklat tillsammans med skolpersonal, för skolpersonal. Inga onödiga funktioner — bara det som behövs när morgonen är som mest intensiv.',
+    'f1.title':'Dagens bemanning','f1.body':'Se direkt vilka som är på plats, vilka som är lediga och vilka lektioner som pågår. Markera frånvaro med ett klick.',
+    'f2.title':'Lektion och klass','f2.body':'Se klass, sal och tid för varje lektion som behöver vikarie. Inget letande i schemat.',
+    'f3.title':'Bemanningsöversikt','f3.body':'Följ hur vikariaten fördelas och se om någon får ta för mycket. En tydlig översikt för rektor, administration och HR.',
+    'f4.title':'Externa vikarier och kostnader','f4.body':'Lägg in externa vikarier och följ kostnaderna löpande. Enklare budgetuppföljning utan extra manuellt arbete.',
+    'f5.title':'Mindre administration','f5.body':'En enda vy för dagens bemanning. Inga kalkylblad att uppdatera, inga listor att skriva ut.',
+    'f6.title':'Rapporter till Excel','f6.body':'Ta fram rapporter för rektor, ekonomi och SCB. Exportera till Excel när du behöver.',
+    'sec.eyebrow':'SÄKERHET OCH INTEGRITET','sec.title':'Byggt för svenska skolors vardag',
+    'sec.lead':'Frånvaro och bemanning innehåller känsliga personuppgifter. Därför är Frånvarokollen byggt med GDPR och svenska dataskyddskrav som grund.',
+    'sec1.title':'All data lagras inom EU','sec1.body':'Lagring och säkerhetskopior hanteras på servrar inom EU. Ingen överföring av data till länder utanför EU.',
+    'sec2.title':'Anpassat för GDPR','sec2.body':'Personuppgiftsbiträdesavtal ingår. Stöd finns för rättslig grund, behörighetsstyrning och gallringsrutiner.',
+    'sec3.title':'Roller och spårbarhet','sec3.body':'Behörigheter styrs efter roll — rektor, samordnare, lärare. Alla ändringar sparas i en tydlig logg, så det går alltid att följa upp.',
+    'contact.eyebrow':'KOM IGÅNG','contact.title':'Vill ni se hur Frånvarokollen fungerar på er skola?',
+    'contact.lead':'Vi visar hur Frånvarokollen kan användas utifrån er skolas storlek, system och arbetssätt. Hör av er så bokar vi en kort genomgång.',
+    'contact.cta_primary':'Gå med i väntelistan →','contact.email_label':'E-post:','contact.location_label':'Plats:',
+    'footer.tagline':'Frånvaro, vikarier och bemanning för svenska skolor. All data inom EU och systemet är anpassat för GDPR.',
+    'footer.product':'Produkt','footer.company':'Företag','footer.legal':'Juridik',
+    'footer.privacy':'Integritetspolicy','footer.terms':'Villkor','footer.dpa':'DPA / PuB-avtal',
+    'footer.org':'Org.nr: 559585-6450','footer.made':'Byggd i Sverige',
+    'modal.eyebrow':'VÄNTELISTAN','modal.title':'Anmäl er skola till pilotprogrammet',
+    'modal.lead':'Begränsat antal platser. Fyll i formuläret så hör vi av oss.',
+    'modal.label_name':'Namn <span class="req">*</span>','modal.label_school':'Skola <span class="req">*</span>',
+    'modal.label_email':'E-postadress <span class="req">*</span>','modal.label_comments':'Kommentarer',
+    'modal.submit':'Anmäl oss till väntelistan →','modal.note':'Dina uppgifter används enbart för att kontakta er angående pilotprogrammet.',
+    'modal.success_title':'Tack för er anmälan!','modal.success_body':'Vi hör av oss inom kort för att boka en genomgång anpassad för er skola.','modal.success_close':'Stäng'
+  },
+  en: {
+    'nav.video':'Demo','nav.features':'Features','nav.security':'Security','nav.contact':'Contact','nav.cta':'Join the waitlist',
+    'banner.1':'🎉 Join the waitlist','banner.2':'Limited pilot places','banner.3':'Launching 2026','banner.cta':'Join the waitlist →',
+    'hero.eyebrow':'06:45 · A TEACHER CALLS IN SICK',
+    'hero.title':'Four lessons to cover. Twenty staff to check. <span class="accent">Fourteen minutes left.</span>',
+    'hero.lead':"The morning chaos in Swedish schools is a solvable problem. Frånvarokollen finds the right substitute in seconds — based on schedule, workload and qualifications. You decide. We do the legwork.",
+    'hero.cta_primary':'Join the waitlist →','hero.cta_secondary':'Watch demo (23 sec)',
+    'hero.trust_1':'All data within the EU','hero.trust_2':'GDPR-aligned','hero.trust_3':'Built for Swedish schools',
+    'mockup.title':'Absence today','mockup.meta':'5B · Mathematics · 4 lessons','mockup.sick':'SICK',
+    'mockup.suggestions':'Suggested substitutes','mockup.pick':'Pick','mockup.found':'to a solution','mockup.confirm':'to confirm',
+    'video.eyebrow':'SEE FRÅNVAROKOLLEN IN ACTION','video.title':'23 seconds. The whole workflow.',
+    'video.lead':'From the 06:45 sick call to a confirmed substitute — without phone queues or spreadsheets.',
+    'video.play_label':'Play with sound','video.caption':'Sound off by default. Click the play button to restart with sound.','video.fallback':'Your browser does not support video.',
+    'features.eyebrow':'FEATURES','features.title':'Everything a substitute coordinator needs. Nothing extra.',
+    'features.lead':'Developed together with school staff, for school staff. No unnecessary features — only what you need when the morning is at its most intense.',
+    'f1.title':"Today's staffing",'f1.body':'See straight away who is in, who is free and which lessons are running. Mark absence with one click.',
+    'f2.title':'Lesson and class','f2.body':'See class, room and time for every lesson that needs cover. No hunting through the schedule.',
+    'f3.title':'Staffing overview','f3.body':'Track how cover is distributed and see if anyone is taking on too much. A clear overview for principals, admin and HR.',
+    'f4.title':'External substitutes and costs','f4.body':'Add external substitutes and track their costs as you go. Easier budget follow-up without extra manual work.',
+    'f5.title':'Less admin','f5.body':"A single view for today's staffing. No spreadsheets to update, no lists to print out.",
+    'f6.title':'Reports to Excel','f6.body':'Produce reports for principals, finance and SCB. Export to Excel when you need to.',
+    'sec.eyebrow':'SECURITY AND PRIVACY','sec.title':'Built for the everyday reality of Swedish schools',
+    'sec.lead':"Absence and staffing involve sensitive personal data. That's why Frånvarokollen is built with GDPR and Swedish data protection requirements as the foundation.",
+    'sec1.title':'All data stored within the EU','sec1.body':'Storage and backups are handled on servers within the EU. No data transfers to countries outside the EU.',
+    'sec2.title':'GDPR-aligned','sec2.body':'Data Processing Agreement included. Support for legal basis, role-based access and retention routines.',
+    'sec3.title':'Roles and audit trail','sec3.body':'Permissions are managed by role — principal, coordinator, teacher. Every change is logged, so it can always be followed up.',
+    'contact.eyebrow':'GET STARTED','contact.title':'Want to see how Frånvarokollen would work at your school?',
+    'contact.lead':"We'll show how Frånvarokollen can be used based on your school's size, systems and ways of working. Get in touch and we'll book a short walkthrough.",
+    'contact.cta_primary':'Join the waitlist →','contact.email_label':'Email:','contact.location_label':'Location:',
+    'footer.tagline':'Absence, substitutes and staffing for Swedish schools. All data within the EU and the system is GDPR-aligned.',
+    'footer.product':'Product','footer.company':'Company','footer.legal':'Legal',
+    'footer.privacy':'Privacy Policy','footer.terms':'Terms','footer.dpa':'DPA',
+    'footer.org':'Org.no: 559585-6450','footer.made':'Made in Sweden',
+    'modal.eyebrow':'WAITLIST','modal.title':'Add your school to the pilot programme',
+    'modal.lead':"Limited places. Fill in the form and we'll be in touch.",
+    'modal.label_name':'Name <span class="req">*</span>','modal.label_school':'School <span class="req">*</span>',
+    'modal.label_email':'Email <span class="req">*</span>','modal.label_comments':'Comments',
+    'modal.submit':'Add us to the waitlist →','modal.note':"Your details are only used to contact you about the pilot programme.",
+    'modal.success_title':'Thanks for signing up!','modal.success_body':"We'll be in touch shortly to book a walkthrough tailored to your school.",'modal.success_close':'Close'
+  }
+};
+
+function setLang(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
+  });
+  document.querySelectorAll('[data-lang-btn]').forEach(function(b){
+    var active = b.getAttribute('data-lang-btn') === lang;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  try { localStorage.setItem('fk_lang', lang); } catch(e) {}
+}
+
+document.querySelectorAll('[data-lang-btn]').forEach(function(btn){
+  btn.addEventListener('click', function(){ setLang(btn.getAttribute('data-lang-btn')); });
+});
+try { if(localStorage.getItem('fk_lang') === 'en') setLang('en'); } catch(e) {}
+
+/* Mobile menu */
+var navToggle = document.getElementById('navToggle');
+var mobileMenu = document.getElementById('mobileMenu');
+if(navToggle){
+  navToggle.addEventListener('click', function(){ mobileMenu.classList.toggle('open'); });
+  mobileMenu.addEventListener('click', function(e){ if(e.target.tagName === 'A') mobileMenu.classList.remove('open'); });
+}
+
+/* Reveal on scroll */
+if('IntersectionObserver' in window){
+  var revealIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); revealIo.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ revealIo.observe(el); });
+} else {
+  document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+}
+
+/* Waitlist banner + modal */
+document.addEventListener('DOMContentLoaded', function(){
+  var banner      = document.getElementById('waitlistBanner');
+  var modal       = document.getElementById('waitlistModal');
+  var formBody    = document.getElementById('modalFormBody');
+  var successView = document.getElementById('modalSuccess');
+  var formError   = document.getElementById('formError');
+  var modalOpenedAt = 0;
+
+  function openModal(){
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    modalOpenedAt = Date.now();
+    setTimeout(function(){ var el = document.getElementById('f_namn'); if(el) el.focus(); }, 50);
+  }
+  function closeModal(){ modal.classList.remove('open'); document.body.style.overflow = ''; }
+
+  banner.addEventListener('click', function(e){ if(e.target.id !== 'dismissBanner') openModal(); });
+
+  document.querySelectorAll('[data-waitlist]').forEach(function(btn){
+    btn.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+  });
+
+  document.getElementById('dismissBanner').addEventListener('click', function(e){
+    e.stopPropagation();
+    banner.style.display = 'none';
+    try { sessionStorage.setItem('fk_banner_dismissed','1'); } catch(e) {}
+  });
+  try { if(sessionStorage.getItem('fk_banner_dismissed')) banner.style.display = 'none'; } catch(e) {}
+
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('closeSuccess').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeModal(); });
+
+  document.getElementById('formSubmit').addEventListener('click', async function(){
+    formError.style.display = 'none';
+
+    var hp = document.getElementById('f_company_website');
+    if(hp && hp.value){ formBody.style.display = 'none'; successView.classList.add('show'); return; }
+
+    if(Date.now() - modalOpenedAt < 2000){
+      formError.textContent = 'Vänligen vänta en stund innan du skickar.';
+      formError.style.display = 'block'; return;
+    }
+
+    var namn  = document.getElementById('f_namn').value.trim();
+    var skola = document.getElementById('f_skola').value.trim();
+    var epost = document.getElementById('f_epost').value.trim();
+    var komm  = document.getElementById('f_kommentarer').value.trim();
+
+    if(!namn || !skola || !epost){ formError.textContent = 'Fyll i namn, skola och e-postadress.'; formError.style.display = 'block'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(epost)){ formError.textContent = 'Ange en giltig e-postadress.'; formError.style.display = 'block'; return; }
+
+    this.disabled = true; this.textContent = 'Skickar…';
+    var FORM = '1FAIpQLSc4H2Lfo2gGYckgB37qVxcP1mqAqLNM7yfTvXqBX9KrASjnDw';
+    var body = new URLSearchParams({'entry.1366650426':namn,'entry.208385686':skola,'entry.3578072':epost,'entry.541496665':komm});
+
+    try {
+      await fetch('https://docs.google.com/forms/d/e/' + FORM + '/formResponse', {
+        method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:body.toString()
+      });
+      formBody.style.display = 'none'; successView.classList.add('show');
+    } catch(err) {
+      formError.textContent = 'Något gick fel. Mejla oss på info@franvarokollen.com.';
+      formError.style.display = 'block'; this.disabled = false; this.textContent = 'Anmäl oss till väntelistan →';
+    }
+  });
+});
+
+/* Demo video */
+document.addEventListener('DOMContentLoaded', function(){
+  var v = document.getElementById('demoVideo');
+  var overlay = document.getElementById('videoPlayOverlay');
+  var muteBtn = document.getElementById('videoMuteToggle');
+  if(!v || !overlay) return;
+
+  function tryPlay(){ var p = v.play(); if(p && typeof p.catch === 'function') p.catch(function(){}); }
+
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) tryPlay(); else v.pause(); });
+    }, { threshold: 0.25 });
+    io.observe(v);
+  } else { tryPlay(); }
+
+  overlay.addEventListener('click', function(){
+    v.muted = false; v.currentTime = 0;
+    var p = v.play(); if(p && typeof p.catch === 'function') p.catch(function(err){ console.warn('Playback failed:', err); });
+    overlay.hidden = true; muteBtn.hidden = false; muteBtn.setAttribute('aria-label','Stäng av ljud');
+  });
+
+  muteBtn.addEventListener('click', function(){
+    v.muted = !v.muted; muteBtn.setAttribute('aria-label', v.muted ? 'Sätt på ljud' : 'Stäng av ljud');
+  });
+});
+</script>
+</body>
+</html>
